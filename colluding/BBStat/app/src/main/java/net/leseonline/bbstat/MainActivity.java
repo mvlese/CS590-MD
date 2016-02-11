@@ -65,6 +65,13 @@ public class MainActivity extends AppCompatActivity {
 
         try {
             checkForContactsPermissions();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private void readContacts() {
+        try {
             ContentResolver cr = getContentResolver();
             Cursor cur = cr.query(ContactsContract.Contacts.CONTENT_URI,
                     null, null, null, null);
@@ -87,10 +94,11 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
             }
-        } catch (Exception ex) {
+        }catch (Exception ex) {
             ex.printStackTrace();
         }
     }
+
     private static String[] PERMISSIONS_CONTACT = {Manifest.permission.READ_CONTACTS};
     private static final int REQUEST_CONTACTS = 1;
 
@@ -110,9 +118,28 @@ public class MainActivity extends AppCompatActivity {
             // Contact permissions have been granted. Show the contacts fragment.
             Log.i(TAG,
                     "Contact permissions have already been granted. Displaying contact details.");
-            //logic for contacts goes here
+            readContacts();
         }
+    }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_CONTACTS: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    readContacts();
+                } else {
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                break;
+            }
+            default:
+                break;
+        }
     }
 }
 
