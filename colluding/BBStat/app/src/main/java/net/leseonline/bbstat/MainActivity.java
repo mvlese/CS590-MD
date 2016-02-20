@@ -17,6 +17,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
 
     private final String TAG = "Main Activity";
@@ -70,34 +72,34 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void readContacts() {
-        try {
-            ContentResolver cr = getContentResolver();
-            Cursor cur = cr.query(ContactsContract.Contacts.CONTENT_URI,
-                    null, null, null, null);
-            if (cur.getCount() > 0) {
-                while (cur.moveToNext()) {
-                    String id = cur.getString(cur.getColumnIndex(ContactsContract.Contacts._ID));
-                    String name = cur.getString(cur.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
-                    Toast.makeText(getApplicationContext(), name, Toast.LENGTH_SHORT).show();
-                    if (Integer.parseInt(cur.getString(
-                            cur.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0) {
-                        Cursor pCur = cr.query(
-                                ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                                null,
-                                ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
-                                new String[]{id}, null);
-                        while (pCur.moveToNext()) {
-                            String phoneNo = pCur.getString(pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-                        }
-                        pCur.close();
-                    }
-                }
-            }
-        }catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
+//    private void readContacts() {
+//        try {
+//            ContentResolver cr = getContentResolver();
+//            Cursor cur = cr.query(ContactsContract.Contacts.CONTENT_URI,
+//                    null, null, null, null);
+//            if (cur.getCount() > 0) {
+//                while (cur.moveToNext()) {
+//                    String id = cur.getString(cur.getColumnIndex(ContactsContract.Contacts._ID));
+//                    String name = cur.getString(cur.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+//                    Toast.makeText(getApplicationContext(), name, Toast.LENGTH_SHORT).show();
+//                    if (Integer.parseInt(cur.getString(
+//                            cur.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0) {
+//                        Cursor pCur = cr.query(
+//                                ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+//                                null,
+//                                ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
+//                                new String[]{id}, null);
+//                        while (pCur.moveToNext()) {
+//                            String phoneNo = pCur.getString(pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+//                        }
+//                        pCur.close();
+//                    }
+//                }
+//            }
+//        }catch (Exception ex) {
+//            ex.printStackTrace();
+//        }
+//    }
 
     private static String[] PERMISSIONS_CONTACT = {Manifest.permission.READ_CONTACTS};
     private static final int REQUEST_CONTACTS = 1;
@@ -118,7 +120,8 @@ public class MainActivity extends AppCompatActivity {
             // Contact permissions have been granted. Show the contacts fragment.
             Log.i(TAG,
                     "Contact permissions have already been granted. Displaying contact details.");
-            readContacts();
+            ContactsReader reader = new ContactsReader(this);
+            List<Contact> contacts = reader.readContacts();
         }
     }
 
@@ -130,7 +133,8 @@ public class MainActivity extends AppCompatActivity {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    readContacts();
+                    ContactsReader reader = new ContactsReader(this);
+                    List<Contact> contacts = reader.readContacts();
                 } else {
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
