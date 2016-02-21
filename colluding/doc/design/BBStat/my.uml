@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Model xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xmi:id="_16d1UNi-EeWvC5ya97-r3g" name="NewModel">
+  <packagedElement xmi:type="uml:Package" xmi:id="_GvHeQNi_EeWvC5ya97-r3g" name="net.leseonline.BBStat">
+    <packagedElement xmi:type="uml:Actor" xmi:id="_RNW-wNi_EeWvC5ya97-r3g" name="User">
+      <eAnnotations xmi:id="_RNW-wdi_EeWvC5ya97-r3g" source="http://www.eclipse.org/uml2/2.0.0/UML">
+        <details xmi:id="_RNW-wti_EeWvC5ya97-r3g" key="Human"/>
+      </eAnnotations>
+    </packagedElement>
+    <packagedElement xmi:type="uml:UseCase" xmi:id="_XbvMkNi_EeWvC5ya97-r3g" name="AddTeam"/>
+    <packagedElement xmi:type="uml:UseCase" xmi:id="_aL_tsNi_EeWvC5ya97-r3g" name="EditTeam"/>
+    <packagedElement xmi:type="uml:UseCase" xmi:id="_cfOUkNi_EeWvC5ya97-r3g" name="AddPlayer"/>
+    <packagedElement xmi:type="uml:UseCase" xmi:id="_e5f-oNi_EeWvC5ya97-r3g" name="DeletePlayer"/>
+    <packagedElement xmi:type="uml:Association" xmi:id="_hCJGINi_EeWvC5ya97-r3g" memberEnd="_hCJGIdi_EeWvC5ya97-r3g _hCJGIti_EeWvC5ya97-r3g">
+      <ownedEnd xmi:id="_hCJGIdi_EeWvC5ya97-r3g" type="_aL_tsNi_EeWvC5ya97-r3g" association="_hCJGINi_EeWvC5ya97-r3g"/>
+      <ownedEnd xmi:id="_hCJGIti_EeWvC5ya97-r3g" type="_cfOUkNi_EeWvC5ya97-r3g" association="_hCJGINi_EeWvC5ya97-r3g"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Association" xmi:id="_hswwcNi_EeWvC5ya97-r3g" memberEnd="_hswwcdi_EeWvC5ya97-r3g _hswwcti_EeWvC5ya97-r3g">
+      <ownedEnd xmi:id="_hswwcdi_EeWvC5ya97-r3g" type="_aL_tsNi_EeWvC5ya97-r3g" association="_hswwcNi_EeWvC5ya97-r3g"/>
+      <ownedEnd xmi:id="_hswwcti_EeWvC5ya97-r3g" type="_e5f-oNi_EeWvC5ya97-r3g" association="_hswwcNi_EeWvC5ya97-r3g"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Association" xmi:id="_isXMQNi_EeWvC5ya97-r3g" memberEnd="_isXMQdi_EeWvC5ya97-r3g _isgWMNi_EeWvC5ya97-r3g">
+      <ownedEnd xmi:id="_isXMQdi_EeWvC5ya97-r3g" type="_RNW-wNi_EeWvC5ya97-r3g" association="_isXMQNi_EeWvC5ya97-r3g"/>
+      <ownedEnd xmi:id="_isgWMNi_EeWvC5ya97-r3g" type="_XbvMkNi_EeWvC5ya97-r3g" association="_isXMQNi_EeWvC5ya97-r3g"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Association" xmi:id="_jV__INi_EeWvC5ya97-r3g" memberEnd="_jV__Idi_EeWvC5ya97-r3g _jV__Iti_EeWvC5ya97-r3g">
+      <ownedEnd xmi:id="_jV__Idi_EeWvC5ya97-r3g" type="_RNW-wNi_EeWvC5ya97-r3g" association="_jV__INi_EeWvC5ya97-r3g"/>
+      <ownedEnd xmi:id="_jV__Iti_EeWvC5ya97-r3g" type="_aL_tsNi_EeWvC5ya97-r3g" association="_jV__INi_EeWvC5ya97-r3g"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Association" xmi:id="_rN_PENi_EeWvC5ya97-r3g" memberEnd="_rN_PEdi_EeWvC5ya97-r3g _rN_PEti_EeWvC5ya97-r3g">
+      <ownedEnd xmi:id="_rN_PEdi_EeWvC5ya97-r3g" type="_RNW-wNi_EeWvC5ya97-r3g" association="_rN_PENi_EeWvC5ya97-r3g"/>
+      <ownedEnd xmi:id="_rN_PEti_EeWvC5ya97-r3g" type="_z48LANjVEeWvC5ya97-r3g" association="_rN_PENi_EeWvC5ya97-r3g"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:UseCase" xmi:id="_ujOqkNjVEeWvC5ya97-r3g" name="EditPlayer"/>
+    <packagedElement xmi:type="uml:Association" xmi:id="_zU0xUNjVEeWvC5ya97-r3g" memberEnd="_zU0xUdjVEeWvC5ya97-r3g _zU0xUtjVEeWvC5ya97-r3g">
+      <ownedEnd xmi:id="_zU0xUdjVEeWvC5ya97-r3g" type="_ujOqkNjVEeWvC5ya97-r3g" association="_zU0xUNjVEeWvC5ya97-r3g"/>
+      <ownedEnd xmi:id="_zU0xUtjVEeWvC5ya97-r3g" type="_RNW-wNi_EeWvC5ya97-r3g" association="_zU0xUNjVEeWvC5ya97-r3g"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:UseCase" xmi:id="_z48LANjVEeWvC5ya97-r3g" name="EditGame"/>
+    <packagedElement xmi:type="uml:Actor" xmi:id="_HOgRgNjWEeWvC5ya97-r3g" name="RemoteClient"/>
+    <packagedElement xmi:type="uml:UseCase" xmi:id="_Kr3wQNjWEeWvC5ya97-r3g" name="GetContacts"/>
+    <packagedElement xmi:type="uml:Association" xmi:id="_Npew4NjWEeWvC5ya97-r3g" memberEnd="_Npew4djWEeWvC5ya97-r3g _Npew4tjWEeWvC5ya97-r3g">
+      <ownedEnd xmi:id="_Npew4djWEeWvC5ya97-r3g" type="_Kr3wQNjWEeWvC5ya97-r3g" association="_Npew4NjWEeWvC5ya97-r3g"/>
+      <ownedEnd xmi:id="_Npew4tjWEeWvC5ya97-r3g" type="_HOgRgNjWEeWvC5ya97-r3g" association="_Npew4NjWEeWvC5ya97-r3g"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Actor" xmi:id="_SNiK4NjWEeWvC5ya97-r3g" name="User">
+      <eAnnotations xmi:id="_SNiK4djWEeWvC5ya97-r3g" source="http://www.eclipse.org/uml2/2.0.0/UML">
+        <details xmi:id="_SNiK4tjWEeWvC5ya97-r3g" key="Human"/>
+      </eAnnotations>
+    </packagedElement>
+    <packagedElement xmi:type="uml:UseCase" xmi:id="_UhUycNjWEeWvC5ya97-r3g" name="RequestContactsAccess"/>
+    <packagedElement xmi:type="uml:UseCase" xmi:id="_Wo_pkNjWEeWvC5ya97-r3g" name="GetContacts"/>
+    <packagedElement xmi:type="uml:UseCase" xmi:id="_ZybfsNjWEeWvC5ya97-r3g" name="SendReportToContact"/>
+    <packagedElement xmi:type="uml:Association" xmi:id="_ciS_QNjWEeWvC5ya97-r3g" memberEnd="_ciS_QdjWEeWvC5ya97-r3g _ciS_QtjWEeWvC5ya97-r3g">
+      <ownedEnd xmi:id="_ciS_QdjWEeWvC5ya97-r3g" type="_UhUycNjWEeWvC5ya97-r3g" association="_ciS_QNjWEeWvC5ya97-r3g"/>
+      <ownedEnd xmi:id="_ciS_QtjWEeWvC5ya97-r3g" type="_SNiK4NjWEeWvC5ya97-r3g" association="_ciS_QNjWEeWvC5ya97-r3g"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Association" xmi:id="_dC5x8NjWEeWvC5ya97-r3g" memberEnd="_dC5x8djWEeWvC5ya97-r3g _dC5x8tjWEeWvC5ya97-r3g">
+      <ownedEnd xmi:id="_dC5x8djWEeWvC5ya97-r3g" type="_Wo_pkNjWEeWvC5ya97-r3g" association="_dC5x8NjWEeWvC5ya97-r3g"/>
+      <ownedEnd xmi:id="_dC5x8tjWEeWvC5ya97-r3g" type="_SNiK4NjWEeWvC5ya97-r3g" association="_dC5x8NjWEeWvC5ya97-r3g"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Association" xmi:id="_d3TDUNjWEeWvC5ya97-r3g" memberEnd="_d3TDUdjWEeWvC5ya97-r3g _d3TDUtjWEeWvC5ya97-r3g">
+      <ownedEnd xmi:id="_d3TDUdjWEeWvC5ya97-r3g" type="_ZybfsNjWEeWvC5ya97-r3g" association="_d3TDUNjWEeWvC5ya97-r3g"/>
+      <ownedEnd xmi:id="_d3TDUtjWEeWvC5ya97-r3g" type="_SNiK4NjWEeWvC5ya97-r3g" association="_d3TDUNjWEeWvC5ya97-r3g"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Class" xmi:id="_2YuxwNjWEeWvC5ya97-r3g" name="MainActivity">
+      <interfaceRealization xmi:id="_KhRNUNjXEeWvC5ya97-r3g" client="_2YuxwNjWEeWvC5ya97-r3g" supplier="_EpHuMNjXEeWvC5ya97-r3g" contract="_EpHuMNjXEeWvC5ya97-r3g"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Class" xmi:id="_DnVhENjXEeWvC5ya97-r3g" name="RemoteService">
+      <interfaceRealization xmi:id="_JRj48NjXEeWvC5ya97-r3g" client="_DnVhENjXEeWvC5ya97-r3g" supplier="_EpHuMNjXEeWvC5ya97-r3g" contract="_EpHuMNjXEeWvC5ya97-r3g"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Interface" xmi:id="_EpHuMNjXEeWvC5ya97-r3g" name="app.content.Context"/>
+    <packagedElement xmi:type="uml:Class" xmi:id="_Rd95sNjXEeWvC5ya97-r3g" name="ContactsReader"/>
+    <packagedElement xmi:type="uml:Association" xmi:id="_j1it8NjXEeWvC5ya97-r3g" name="Context" memberEnd="_j1it8djXEeWvC5ya97-r3g _j1it9NjXEeWvC5ya97-r3g" navigableOwnedEnd="_j1it8djXEeWvC5ya97-r3g">
+      <ownedEnd xmi:id="_j1it8djXEeWvC5ya97-r3g" name="app.content.Contexts" type="_EpHuMNjXEeWvC5ya97-r3g" association="_j1it8NjXEeWvC5ya97-r3g">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_j1it8tjXEeWvC5ya97-r3g"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_j1it89jXEeWvC5ya97-r3g" value="*"/>
+      </ownedEnd>
+      <ownedEnd xmi:id="_j1it9NjXEeWvC5ya97-r3g" name="contactsReaders" type="_Rd95sNjXEeWvC5ya97-r3g" association="_j1it8NjXEeWvC5ya97-r3g">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_j1it9djXEeWvC5ya97-r3g"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_j1it9tjXEeWvC5ya97-r3g" value="*"/>
+      </ownedEnd>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Class" xmi:id="_IzUoUNjYEeWvC5ya97-r3g" name="BasketballStatistics">
+      <ownedAttribute xmi:id="_yN0eQNjbEeWvC5ya97-r3g" name="id"/>
+      <ownedAttribute xmi:id="_y2FYINjbEeWvC5ya97-r3g" name="gameId"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Class" xmi:id="_R8_ikNjYEeWvC5ya97-r3g" name="Statistic">
+      <ownedAttribute xmi:id="_qRfoQNjYEeWvC5ya97-r3g" name="value"/>
+      <ownedOperation xmi:id="_UUJAINjYEeWvC5ya97-r3g" name="increment"/>
+      <ownedOperation xmi:id="_VgpPgNjYEeWvC5ya97-r3g" name="decrement"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Association" xmi:id="_hJsWQNjYEeWvC5ya97-r3g" name="statisticsToBasketballStatisticss" memberEnd="_hJsWQdjYEeWvC5ya97-r3g _hJsWRNjYEeWvC5ya97-r3g" navigableOwnedEnd="_hJsWRNjYEeWvC5ya97-r3g">
+      <ownedEnd xmi:id="_hJsWQdjYEeWvC5ya97-r3g" name="statistics" type="_R8_ikNjYEeWvC5ya97-r3g" aggregation="shared" association="_hJsWQNjYEeWvC5ya97-r3g">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_hJsWQtjYEeWvC5ya97-r3g"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_hJsWQ9jYEeWvC5ya97-r3g" value="*"/>
+      </ownedEnd>
+      <ownedEnd xmi:id="_hJsWRNjYEeWvC5ya97-r3g" name="basketballStatisticss" type="_IzUoUNjYEeWvC5ya97-r3g" association="_hJsWQNjYEeWvC5ya97-r3g">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_hJsWRdjYEeWvC5ya97-r3g" value="1"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_hJsWRtjYEeWvC5ya97-r3g" value="1"/>
+      </ownedEnd>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Association" xmi:id="_BX0DkNjZEeWvC5ya97-r3g" name="basketballStatisticssToMainActivitys" memberEnd="_BX0DkdjZEeWvC5ya97-r3g _BX0DlNjZEeWvC5ya97-r3g" navigableOwnedEnd="_BX0DlNjZEeWvC5ya97-r3g">
+      <ownedEnd xmi:id="_BX0DkdjZEeWvC5ya97-r3g" name="basketballStatisticss" type="_IzUoUNjYEeWvC5ya97-r3g" aggregation="shared" association="_BX0DkNjZEeWvC5ya97-r3g">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_BX0DktjZEeWvC5ya97-r3g"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_BX0Dk9jZEeWvC5ya97-r3g" value="*"/>
+      </ownedEnd>
+      <ownedEnd xmi:id="_BX0DlNjZEeWvC5ya97-r3g" name="mainActivitys" type="_2YuxwNjWEeWvC5ya97-r3g" association="_BX0DkNjZEeWvC5ya97-r3g">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_BX0DldjZEeWvC5ya97-r3g" value="1"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_BX0DltjZEeWvC5ya97-r3g" value="1"/>
+      </ownedEnd>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Class" xmi:id="_NYx7ENjZEeWvC5ya97-r3g" name="Contact"/>
+    <packagedElement xmi:type="uml:Association" xmi:id="_QFziANjZEeWvC5ya97-r3g" name="contactsToRemoteServices" memberEnd="_QFziAdjZEeWvC5ya97-r3g _QFziBNjZEeWvC5ya97-r3g" navigableOwnedEnd="_QFziBNjZEeWvC5ya97-r3g">
+      <ownedEnd xmi:id="_QFziAdjZEeWvC5ya97-r3g" name="contacts" type="_NYx7ENjZEeWvC5ya97-r3g" aggregation="shared" association="_QFziANjZEeWvC5ya97-r3g">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_QFziAtjZEeWvC5ya97-r3g"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_QFziA9jZEeWvC5ya97-r3g" value="*"/>
+      </ownedEnd>
+      <ownedEnd xmi:id="_QFziBNjZEeWvC5ya97-r3g" name="remoteServices" type="_DnVhENjXEeWvC5ya97-r3g" association="_QFziANjZEeWvC5ya97-r3g">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_QFziBdjZEeWvC5ya97-r3g"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_QFziBtjZEeWvC5ya97-r3g" value="*"/>
+      </ownedEnd>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Association" xmi:id="_QuWvwNjZEeWvC5ya97-r3g" name="contactsToMainActivitys" memberEnd="_QuWvwdjZEeWvC5ya97-r3g _Quf5stjZEeWvC5ya97-r3g" navigableOwnedEnd="_Quf5stjZEeWvC5ya97-r3g">
+      <ownedEnd xmi:id="_QuWvwdjZEeWvC5ya97-r3g" name="contacts" type="_NYx7ENjZEeWvC5ya97-r3g" aggregation="shared" association="_QuWvwNjZEeWvC5ya97-r3g">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_Quf5sNjZEeWvC5ya97-r3g"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_Quf5sdjZEeWvC5ya97-r3g" value="*"/>
+      </ownedEnd>
+      <ownedEnd xmi:id="_Quf5stjZEeWvC5ya97-r3g" name="mainActivitys" type="_2YuxwNjWEeWvC5ya97-r3g" association="_QuWvwNjZEeWvC5ya97-r3g">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_Quf5s9jZEeWvC5ya97-r3g"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_Quf5tNjZEeWvC5ya97-r3g" value="*"/>
+      </ownedEnd>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Interface" xmi:id="_nWkSwNjZEeWvC5ya97-r3g" name="IDatabase">
+      <ownedOperation xmi:id="_CQAaYNjaEeWvC5ya97-r3g" name="saveTeam"/>
+      <ownedOperation xmi:id="_DNL0UNjaEeWvC5ya97-r3g" name="savePlayer"/>
+      <ownedOperation xmi:id="_EYkpYNjaEeWvC5ya97-r3g" name="saveGame"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Association" xmi:id="_sztQ4NjZEeWvC5ya97-r3g" memberEnd="_sztQ4djZEeWvC5ya97-r3g _sztQ5NjZEeWvC5ya97-r3g" navigableOwnedEnd="_sztQ4djZEeWvC5ya97-r3g">
+      <name xsi:nil="true"/>
+      <ownedEnd xmi:id="_sztQ4djZEeWvC5ya97-r3g" name="iDatabases" type="_nWkSwNjZEeWvC5ya97-r3g" association="_sztQ4NjZEeWvC5ya97-r3g">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_sztQ4tjZEeWvC5ya97-r3g" value="1"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_sztQ49jZEeWvC5ya97-r3g" value="1"/>
+      </ownedEnd>
+      <ownedEnd xmi:id="_sztQ5NjZEeWvC5ya97-r3g" name="mainActivitys" type="_2YuxwNjWEeWvC5ya97-r3g" association="_sztQ4NjZEeWvC5ya97-r3g">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_sztQ5djZEeWvC5ya97-r3g" value="1"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_sztQ5tjZEeWvC5ya97-r3g" value="1"/>
+      </ownedEnd>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Class" xmi:id="_PlyIsNjaEeWvC5ya97-r3g" name="Game">
+      <ownedAttribute xmi:id="_q0OagNjbEeWvC5ya97-r3g" name="id"/>
+      <ownedAttribute xmi:id="_wrkrkNjfEeWvC5ya97-r3g" name="timePlayed"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Class" xmi:id="_Q0qWoNjaEeWvC5ya97-r3g" name="Team">
+      <ownedAttribute xmi:id="_sdzAYNjbEeWvC5ya97-r3g" name="id"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Class" xmi:id="_UwUT4NjaEeWvC5ya97-r3g" name="Player">
+      <ownedAttribute xmi:id="_t1pkINjbEeWvC5ya97-r3g" name="id"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Association" xmi:id="_WzxZYNjaEeWvC5ya97-r3g" name="playersToTeams" memberEnd="_WzxZYdjaEeWvC5ya97-r3g _WzxZZNjaEeWvC5ya97-r3g" navigableOwnedEnd="_WzxZZNjaEeWvC5ya97-r3g">
+      <ownedEnd xmi:id="_WzxZYdjaEeWvC5ya97-r3g" name="players" type="_UwUT4NjaEeWvC5ya97-r3g" aggregation="shared" association="_WzxZYNjaEeWvC5ya97-r3g">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_WzxZYtjaEeWvC5ya97-r3g"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_WzxZY9jaEeWvC5ya97-r3g" value="*"/>
+      </ownedEnd>
+      <ownedEnd xmi:id="_WzxZZNjaEeWvC5ya97-r3g" name="teams" type="_Q0qWoNjaEeWvC5ya97-r3g" association="_WzxZYNjaEeWvC5ya97-r3g">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_WzxZZdjaEeWvC5ya97-r3g" value="1"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_WzxZZtjaEeWvC5ya97-r3g" value="*"/>
+      </ownedEnd>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Association" xmi:id="_uCossNjaEeWvC5ya97-r3g" name="basketballStatisticssToPlayers" memberEnd="_uCossdjaEeWvC5ya97-r3g _uCydsNjaEeWvC5ya97-r3g" navigableOwnedEnd="_uCydsNjaEeWvC5ya97-r3g">
+      <ownedEnd xmi:id="_uCossdjaEeWvC5ya97-r3g" name="basketballStatisticss" type="_IzUoUNjYEeWvC5ya97-r3g" aggregation="shared" association="_uCossNjaEeWvC5ya97-r3g">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_uCosstjaEeWvC5ya97-r3g"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_uCoss9jaEeWvC5ya97-r3g" value="*"/>
+      </ownedEnd>
+      <ownedEnd xmi:id="_uCydsNjaEeWvC5ya97-r3g" name="players" type="_UwUT4NjaEeWvC5ya97-r3g" association="_uCossNjaEeWvC5ya97-r3g">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_uCydsdjaEeWvC5ya97-r3g"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_uCydstjaEeWvC5ya97-r3g" value="*"/>
+      </ownedEnd>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Association" xmi:id="_DOrzsNjbEeWvC5ya97-r3g" name="gamesToTeams" memberEnd="_DOrzsdjbEeWvC5ya97-r3g _DO09otjbEeWvC5ya97-r3g" navigableOwnedEnd="_DO09otjbEeWvC5ya97-r3g">
+      <ownedEnd xmi:id="_DOrzsdjbEeWvC5ya97-r3g" name="games" type="_PlyIsNjaEeWvC5ya97-r3g" aggregation="shared" association="_DOrzsNjbEeWvC5ya97-r3g">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_DO09oNjbEeWvC5ya97-r3g"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_DO09odjbEeWvC5ya97-r3g" value="*"/>
+      </ownedEnd>
+      <ownedEnd xmi:id="_DO09otjbEeWvC5ya97-r3g" name="teams" type="_Q0qWoNjaEeWvC5ya97-r3g" association="_DOrzsNjbEeWvC5ya97-r3g">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_DO09o9jbEeWvC5ya97-r3g"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_DO09pNjbEeWvC5ya97-r3g" value="*"/>
+      </ownedEnd>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Association" xmi:id="_UH-sENjbEeWvC5ya97-r3g" name="gameId" memberEnd="_UH-sEdjbEeWvC5ya97-r3g _UH-sFNjbEeWvC5ya97-r3g" navigableOwnedEnd="_UH-sFNjbEeWvC5ya97-r3g">
+      <ownedEnd xmi:id="_UH-sEdjbEeWvC5ya97-r3g" name="basketballStatisticss" type="_IzUoUNjYEeWvC5ya97-r3g" association="_UH-sENjbEeWvC5ya97-r3g">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_UH-sEtjbEeWvC5ya97-r3g"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_UH-sE9jbEeWvC5ya97-r3g" value="*"/>
+      </ownedEnd>
+      <ownedEnd xmi:id="_UH-sFNjbEeWvC5ya97-r3g" name="games" type="_PlyIsNjaEeWvC5ya97-r3g" association="_UH-sENjbEeWvC5ya97-r3g">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_UH-sFdjbEeWvC5ya97-r3g"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_UH-sFtjbEeWvC5ya97-r3g" value="*"/>
+      </ownedEnd>
+    </packagedElement>
+  </packagedElement>
+</uml:Model>
