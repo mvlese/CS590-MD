@@ -1,4 +1,4 @@
-package net.leseonline.bbstat;
+package net.leseonline.bbstat.stat;
 
 /**
  * Created by mvlese on 2/20/2016.
@@ -10,11 +10,11 @@ public class Statistic {
         value = 0;
     }
 
-    public void add() {
+    public void increment() {
         value++;
     }
 
-    public void subtract() {
+    public void decrement() {
         value--;
     }
 

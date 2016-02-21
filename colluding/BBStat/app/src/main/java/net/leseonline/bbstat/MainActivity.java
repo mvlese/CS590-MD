@@ -1,13 +1,9 @@
 package net.leseonline.bbstat;
 
 import android.Manifest;
-import android.content.ContentResolver;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -15,13 +11,16 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
+
+import net.leseonline.bbstat.contact.Contact;
 
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     private final String TAG = "Main Activity";
+    private static String[] PERMISSIONS_CONTACT = {Manifest.permission.READ_CONTACTS};
+    private static final int REQUEST_CONTACTS = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,45 +63,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void testGetContacts() {
-
         try {
             checkForContactsPermissions();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
-
-//    private void readContacts() {
-//        try {
-//            ContentResolver cr = getContentResolver();
-//            Cursor cur = cr.query(ContactsContract.Contacts.CONTENT_URI,
-//                    null, null, null, null);
-//            if (cur.getCount() > 0) {
-//                while (cur.moveToNext()) {
-//                    String id = cur.getString(cur.getColumnIndex(ContactsContract.Contacts._ID));
-//                    String name = cur.getString(cur.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
-//                    Toast.makeText(getApplicationContext(), name, Toast.LENGTH_SHORT).show();
-//                    if (Integer.parseInt(cur.getString(
-//                            cur.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0) {
-//                        Cursor pCur = cr.query(
-//                                ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-//                                null,
-//                                ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
-//                                new String[]{id}, null);
-//                        while (pCur.moveToNext()) {
-//                            String phoneNo = pCur.getString(pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-//                        }
-//                        pCur.close();
-//                    }
-//                }
-//            }
-//        }catch (Exception ex) {
-//            ex.printStackTrace();
-//        }
-//    }
-
-    private static String[] PERMISSIONS_CONTACT = {Manifest.permission.READ_CONTACTS};
-    private static final int REQUEST_CONTACTS = 1;
 
     private void checkForContactsPermissions() {
         // Verify that all required contact permissions have been granted.
@@ -138,6 +104,7 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
+                    Log.d(TAG, "Contact permissions denied.");
                 }
                 break;
             }

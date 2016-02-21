@@ -5,6 +5,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.provider.ContactsContract;
 
+import net.leseonline.bbstat.contact.Contact;
+
 import java.util.ArrayList;
 import java.util.List;
 
