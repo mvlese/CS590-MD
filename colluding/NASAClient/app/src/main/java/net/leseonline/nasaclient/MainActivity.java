@@ -1,6 +1,16 @@
 package net.leseonline.nasaclient;
 
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.os.Message;
+import android.os.Messenger;
+import android.os.RemoteException;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -8,6 +18,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -49,4 +61,60 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    private boolean isBound = false;
+    private Messenger mMessenger;
+    private ServiceConnection serviceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            try {
+                isBound = true;
+                mMessenger = new Messenger(service);
+            } catch(Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            serviceConnection = null;
+            isBound = false;
+        }
+    };
+
+    private static Intent convertImplicitIntentToExplicitIntent(Intent implicitIntent, Context context) {
+        PackageManager pm = context.getPackageManager();
+        List<ResolveInfo> resolveInfoList = pm.queryIntentServices(implicitIntent, 0);
+
+        if (resolveInfoList == null || resolveInfoList.size() != 1) {
+            return null;
+        }
+        ResolveInfo serviceInfo = resolveInfoList.get(0);
+        ComponentName component = new ComponentName(serviceInfo.serviceInfo.packageName, serviceInfo.serviceInfo.name);
+        Intent explicitIntent = new Intent(implicitIntent);
+        explicitIntent.setComponent(component);
+        return explicitIntent;
+    }
+
+    static final int SAY_HI = 0;
+    static final int SAY_HELLO = 1;
+
+    private void getRemoteContacts() {
+        try {
+            Intent mIntent = new Intent();
+            mIntent.setAction("com.example.RemoteService");
+            Intent explicitIntent = convertImplicitIntentToExplicitIntent(mIntent, getApplicationContext());
+            bindService(explicitIntent, serviceConnection, BIND_AUTO_CREATE);
+        } catch(Exception ex) {
+            ex.printStackTrace();
+        }
+
+        Message msg = Message.obtain(null, SAY_HELLO, 0, 0);
+        try {
+            mMessenger.send(msg);
+        } catch (RemoteException ex) {
+            ex.printStackTrace();
+        }
+    }
+
 }
