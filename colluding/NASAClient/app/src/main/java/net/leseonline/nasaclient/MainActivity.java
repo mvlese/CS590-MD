@@ -15,6 +15,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,8 +35,9 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+                getRemoteContacts();
             }
         });
     }
@@ -109,11 +111,17 @@ public class MainActivity extends AppCompatActivity {
             ex.printStackTrace();
         }
 
-        Message msg = Message.obtain(null, SAY_HELLO, 0, 0);
-        try {
-            mMessenger.send(msg);
-        } catch (RemoteException ex) {
-            ex.printStackTrace();
+        if (mMessenger != null) {
+            Message msg = Message.obtain(null, SAY_HELLO, 0, 0);
+            try {
+                Log.d("nasa", "sending message");
+                mMessenger.send(msg);
+                Log.d("nasa", "sent message");
+            } catch (RemoteException ex) {
+                ex.printStackTrace();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
     }
 

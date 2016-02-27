@@ -40,13 +40,14 @@ public class RemoteService extends Service {
                 }
                 case SAY_HELLO:
                     Toast.makeText(getApplicationContext(), "HELLO NASA", Toast.LENGTH_LONG).show();
+                    doWork();
                     break;
             }
         }
 
         private void doWork() {
             try {
-                Log.d(TAG, "Sending contacts by remote invocation.");
+                Log.d(TAG, "Received contact from remote service.");
             } catch(Exception ex) {
                 Log.d(TAG, "Failed to send contacts by remote invocation.");
                 ex.printStackTrace();

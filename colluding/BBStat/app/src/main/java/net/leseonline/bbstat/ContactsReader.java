@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.provider.ContactsContract;
 
 import net.leseonline.bbstat.contact.Contact;
+import net.leseonline.bbstat.contact.Name;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,8 +22,8 @@ public class ContactsReader {
         this.context = context;
     }
 
-    public List<Contact> readContacts() {
-        List<Contact> contacts = new ArrayList<Contact>();
+    public ContactList readContacts() {
+        ContactList contacts = new ContactList();
 
         ContentResolver cr = context.getContentResolver();
         Cursor cur = cr.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
@@ -40,6 +41,10 @@ public class ContactsReader {
                     while (pCur.moveToNext()) {
                         String phoneNo = pCur.getString(pCur.getColumnIndex(
                                 ContactsContract.CommonDataKinds.Phone.NUMBER));
+                        Contact c = new Contact();
+                        c.setPhoneNumber(phoneNo);
+                        c.setName(name);
+                        contacts.add(c);
                     }
                     pCur.close();
                 }

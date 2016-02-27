@@ -1,8 +1,17 @@
 package net.leseonline.bbstat;
 
 import android.Manifest;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.os.Message;
+import android.os.Messenger;
+import android.os.RemoteException;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -99,8 +108,7 @@ public class MainActivity extends AppCompatActivity {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    ContactsReader reader = new ContactsReader(this);
-                    List<Contact> contacts = reader.readContacts();
+                    Log.d(TAG, "Contact permissions approved.");
                 } else {
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
@@ -112,5 +120,6 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
     }
+
 }
 

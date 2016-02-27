@@ -13,11 +13,11 @@ public class Contact {
         this.address = address;
     }
 
-    public Name getName() {
+    public String getName() {
         return name;
     }
 
-    public void setName(Name name) {
+    public void setName(String name) {
         this.name = name;
     }
 
@@ -38,7 +38,7 @@ public class Contact {
     }
 
     private Address address;
-    private Name name;
+    private String name;
     private String phoneNumber;
     private String email;
 

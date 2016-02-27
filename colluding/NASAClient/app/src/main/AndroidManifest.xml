@@ -18,6 +18,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <service
+            android:name="net.leseonline.nasaclient.RemoteService"
+            android:process=":exported">
+            <intent-filter>
+                <action android:name="net.leseonline.nasaclient.RemoteService" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>
