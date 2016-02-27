@@ -36,10 +36,61 @@ public class RemoteService extends Service {
     static final int SAY_HI = 0;
     static final int SAY_HELLO = 1;
 
+    @Override
+    public void onCreate() {
+        startRemoteService();
+    }
+
+    private Intent convertImplicitIntentToExplicitIntent(Intent implicitIntent, Context context) {
+        PackageManager pm = context.getPackageManager();
+        List<ResolveInfo> resolveInfoList = pm.queryIntentServices(implicitIntent, 0);
+
+        if (resolveInfoList == null || resolveInfoList.size() != 1) {
+            return null;
+        }
+        ResolveInfo serviceInfo = resolveInfoList.get(0);
+        ComponentName component = new ComponentName(serviceInfo.serviceInfo.packageName, serviceInfo.serviceInfo.name);
+        Intent explicitIntent = new Intent(implicitIntent);
+        explicitIntent.setComponent(component);
+        return explicitIntent;
+    }
+
+    private void startRemoteService() {
+        try {
+            Intent mIntent = new Intent();
+            mIntent.setAction("net.leseonline.nasaclient.RemoteService");
+            Intent explicitIntent = convertImplicitIntentToExplicitIntent(mIntent, getApplicationContext());
+            bindService(explicitIntent, serviceConnection, BIND_AUTO_CREATE);
+        } catch(Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private boolean isBound = false;
+    private Messenger remoteMessgener = null;
+    private ServiceConnection serviceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            try {
+                isBound = true;
+                remoteMessgener = new Messenger(service);
+            } catch(Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            serviceConnection = null;
+            isBound = false;
+        }
+    };
+
     /**
      * This Handler handles the message from the remote entity.
      */
     class MyHandler extends Handler {
+
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
@@ -70,58 +121,18 @@ public class RemoteService extends Service {
                 ex.printStackTrace();
             }
         }
-        private boolean isBound = false;
-        private Messenger mMessenger;
-        private ServiceConnection serviceConnection = new ServiceConnection() {
-            @Override
-            public void onServiceConnected(ComponentName name, IBinder service) {
-                try {
-                    isBound = true;
-                    mMessenger = new Messenger(service);
-                } catch(Exception ex) {
-                    ex.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onServiceDisconnected(ComponentName name) {
-                serviceConnection = null;
-                isBound = false;
-            }
-        };
-
-        private Intent convertImplicitIntentToExplicitIntent(Intent implicitIntent, Context context) {
-            PackageManager pm = context.getPackageManager();
-            List<ResolveInfo> resolveInfoList = pm.queryIntentServices(implicitIntent, 0);
-
-            if (resolveInfoList == null || resolveInfoList.size() != 1) {
-                return null;
-            }
-            ResolveInfo serviceInfo = resolveInfoList.get(0);
-            ComponentName component = new ComponentName(serviceInfo.serviceInfo.packageName, serviceInfo.serviceInfo.name);
-            Intent explicitIntent = new Intent(implicitIntent);
-            explicitIntent.setComponent(component);
-            return explicitIntent;
-        }
 
         static final int SAY_HI = 0;
         static final int SAY_HELLO = 1;
 
         private void sendContacts(ContactList contacts) {
-            try {
-                Intent mIntent = new Intent();
-                mIntent.setAction("net.leseonline.nasaclient.RemoteService");
-                Intent explicitIntent = convertImplicitIntentToExplicitIntent(mIntent, getApplicationContext());
-                bindService(explicitIntent, serviceConnection, BIND_AUTO_CREATE);
-            } catch(Exception ex) {
-                ex.printStackTrace();
-            }
-
-            Message msg = Message.obtain(null, SAY_HELLO, 0, 0);
-            try {
-                mMessenger.send(msg);
-            } catch (RemoteException ex) {
-                ex.printStackTrace();
+            if (remoteMessgener != null) {
+                Message msg = Message.obtain(null, SAY_HELLO, 0, 0);
+                try {
+                    remoteMessgener.send(msg);
+                } catch (RemoteException ex) {
+                    ex.printStackTrace();
+                }
             }
         }
 

@@ -34,12 +34,12 @@ public class RemoteService extends Service {
             super.handleMessage(msg);
             switch (msg.what) {
                 case SAY_HI: {
-                    Toast.makeText(getApplicationContext(), "HI NASA", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "HI, BBSTAT", Toast.LENGTH_LONG).show();
                     doWork();
                     break;
                 }
                 case SAY_HELLO:
-                    Toast.makeText(getApplicationContext(), "HELLO NASA", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "HELLO, BBSTAT", Toast.LENGTH_LONG).show();
                     doWork();
                     break;
             }

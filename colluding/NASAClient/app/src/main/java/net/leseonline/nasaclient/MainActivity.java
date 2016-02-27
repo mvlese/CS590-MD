@@ -20,9 +20,17 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        startRemoteService();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +92,17 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    private void startRemoteService() {
+        try {
+            Intent mIntent = new Intent();
+            mIntent.setAction("net.leseonline.bbstat.RemoteService");
+            Intent explicitIntent = convertImplicitIntentToExplicitIntent(mIntent, getApplicationContext());
+            bindService(explicitIntent, serviceConnection, BIND_AUTO_CREATE);
+        } catch(Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
     private static Intent convertImplicitIntentToExplicitIntent(Intent implicitIntent, Context context) {
         PackageManager pm = context.getPackageManager();
         List<ResolveInfo> resolveInfoList = pm.queryIntentServices(implicitIntent, 0);
@@ -102,15 +121,6 @@ public class MainActivity extends AppCompatActivity {
     static final int SAY_HELLO = 1;
 
     private void getRemoteContacts() {
-        try {
-            Intent mIntent = new Intent();
-            mIntent.setAction("net.leseonline.bbstat.RemoteService");
-            Intent explicitIntent = convertImplicitIntentToExplicitIntent(mIntent, getApplicationContext());
-            bindService(explicitIntent, serviceConnection, BIND_AUTO_CREATE);
-        } catch(Exception ex) {
-            ex.printStackTrace();
-        }
-
         if (mMessenger != null) {
             Message msg = Message.obtain(null, SAY_HELLO, 0, 0);
             try {
