@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
     private void getRemoteContacts() {
         try {
             Intent mIntent = new Intent();
-            mIntent.setAction("com.example.RemoteService");
+            mIntent.setAction("net.leseonline.bbstat.RemoteService");
             Intent explicitIntent = convertImplicitIntentToExplicitIntent(mIntent, getApplicationContext());
             bindService(explicitIntent, serviceConnection, BIND_AUTO_CREATE);
         } catch(Exception ex) {
