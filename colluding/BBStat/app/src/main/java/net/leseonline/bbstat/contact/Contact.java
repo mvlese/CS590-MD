@@ -37,9 +37,20 @@ public class Contact {
         this.email = email;
     }
 
-    private Address address;
-    private String name;
-    private String phoneNumber;
-    private String email;
+    public String toJason() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("{");
+        sb.append("name:" + name);
+        sb.append(",address:" + address.toJson());
+        sb.append(",phoneNumber:" + phoneNumber);
+        sb.append(",email:" + email);
+        sb.append("}");
+        return sb.toString();
+    }
+
+    private Address address = new Address();
+    private String name = "";
+    private String phoneNumber = "";
+    private String email = "";
 
 }
