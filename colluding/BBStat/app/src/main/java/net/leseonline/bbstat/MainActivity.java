@@ -97,11 +97,6 @@ public class MainActivity extends AppCompatActivity {
                     "Contact permissions have already been granted. Displaying contact details.");
             ContactsReader reader = new ContactsReader(this);
             List<Contact> contacts = reader.readContacts();
-            String jsonString = "{\"contacts\":[";
-            for(Contact contact: contacts) {
-                jsonString += contact.toJason();
-            }
-            jsonString += "]}";
         }
     }
 

@@ -42,7 +42,7 @@ public class Contact {
         sb.append("{");
         sb.append(toQuoted("name", name));
         sb.append(",");
-        sb.append(toQuoted("address", address.toJson()));
+        sb.append("\"address\":" + address.toJson());
         sb.append(",");
         sb.append(toQuoted("phoneNumber", phoneNumber));
         sb.append(",");

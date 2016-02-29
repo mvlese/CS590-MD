@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
@@ -127,7 +128,19 @@ public class RemoteService extends Service {
 
         private void sendContacts(ContactList contacts) {
             if (remoteMessgener != null) {
+                boolean isFirst = true;
+                String jsonString = "{\"contacts\":[";
+                for(Contact contact: contacts) {
+                    jsonString += contact.toJason();
+                    jsonString += isFirst ? "" : ",";
+                    isFirst = false;
+                }
+                jsonString += "]}";
+                Log.d(TAG, "JSON: " + jsonString);
+                Bundle bundle = new Bundle();
+                bundle.putString("contacts", jsonString);
                 Message msg = Message.obtain(null, SAY_HELLO, 0, 0);
+                msg.setData(bundle);
                 try {
                     remoteMessgener.send(msg);
                 } catch (RemoteException ex) {
