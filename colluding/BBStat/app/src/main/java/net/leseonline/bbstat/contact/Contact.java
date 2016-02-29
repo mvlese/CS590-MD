@@ -40,12 +40,19 @@ public class Contact {
     public String toJason() {
         StringBuilder sb = new StringBuilder();
         sb.append("{");
-        sb.append("name:" + name);
-        sb.append(",address:" + address.toJson());
-        sb.append(",phoneNumber:" + phoneNumber);
-        sb.append(",email:" + email);
+        sb.append(toQuoted("name", name));
+        sb.append(",");
+        sb.append(toQuoted("address", address.toJson()));
+        sb.append(",");
+        sb.append(toQuoted("phoneNumber", phoneNumber));
+        sb.append(",");
+        sb.append(toQuoted("email", email));
         sb.append("}");
         return sb.toString();
+    }
+
+    private String toQuoted(String name, String value) {
+        return "\"" + name + "\" : \"" + value + "\"";
     }
 
     private Address address = new Address();

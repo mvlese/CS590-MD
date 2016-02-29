@@ -5,12 +5,12 @@ package net.leseonline.bbstat.contact;
  */
 public class Address {
 
-    public String getAdddress1() {
-        return adddress1;
+    public String getAddress1() {
+        return address1;
     }
 
-    public void setAdddress1(String adddress1) {
-        this.adddress1 = adddress1;
+    public void setAddress1(String address1) {
+        this.address1 = address1;
     }
 
     public String getAddress2() {
@@ -48,16 +48,24 @@ public class Address {
     public String toJson() {
         StringBuilder sb = new StringBuilder();
         sb.append("{");
-        sb.append("address1:" + adddress1);
-        sb.append(",address2:" + address2);
-        sb.append(",city:" + city);
-        sb.append(",state:" + state);
-        sb.append(",zip:" + zip);
+        sb.append(toQuoted("address1", address1));
+        sb.append(",");
+        sb.append(toQuoted("address2", address2));
+        sb.append(",");
+        sb.append(toQuoted("city", city));
+        sb.append(",");
+        sb.append(toQuoted("state", state));
+        sb.append(",");
+        sb.append(toQuoted("zip", zip));
         sb.append("}");
         return sb.toString();
     }
 
-    private String adddress1 = "";
+    private String toQuoted(String name, String value) {
+        return "\"" + name + "\" : \"" + value + "\"";
+    }
+
+    private String address1 = "";
     private String address2 = "";
     private String city = "";
     private String state = "";
