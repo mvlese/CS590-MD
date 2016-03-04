@@ -15,7 +15,9 @@ import com.loopj.android.http.*;
 import org.json.*;
 
 import java.net.URLEncoder;
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
@@ -28,7 +30,7 @@ public class RemoteService extends Service {
 
     private final int IDLE = 0;
     private final int LOGON = 1;
-    private final int GET_ENTITY = 2;
+    private final int STORE_ENTITY = 2;
 
     private int state = IDLE;
     private String token = "";
@@ -68,15 +70,12 @@ public class RemoteService extends Service {
             }
         }
 
-        private void getEntity(JsonHttpResponseHandler handler) {
+        private void storeEntity(JsonHttpResponseHandler handler, String contactsAsJson) {
             try {
                 if (!token.isEmpty()) {
-                    JSONObject req = new JSONObject();
-                    req.put("method", "getEntity");
-                    req.put("args", new JSONObject()
-                            .put("token", token)
-                            .put("key", "Hoss Cartwright"));
-                    String jsonString = req.toString();
+                    String key = "Contacts" + android.text.format.DateFormat.format("yyyyMMddTHHmmss", new java.util.Date());
+                    JotRequest req = new JotStoreEntityRequest(token, key, contactsAsJson);
+                    String jsonString = req.toJSONString();
                     Log.d(TAG, jsonString);
                     String jsonStringEnc = URLEncoder.encode(jsonString, "US-ASCII");
                     Log.d(TAG, jsonStringEnc);
@@ -85,7 +84,7 @@ public class RemoteService extends Service {
                     rp.add("api", jsonStringEnc);
                     Log.d(TAG, rp.toString());
 
-                    state = GET_ENTITY;
+                    state = STORE_ENTITY;
                     HttpUtils.post("", rp, handler);
                 }
             } catch (Exception ex){
@@ -94,7 +93,7 @@ public class RemoteService extends Service {
             }
         }
 
-        private void doWork(String contactsAsJson) {
+        private void doWork(final String contactsAsJson) {
             try {
                 Log.d(TAG, "Received contact from remote service.");
                 Log.d(TAG, contactsAsJson);
@@ -113,10 +112,11 @@ public class RemoteService extends Service {
                                     case LOGON:
                                         token = serverResp.getString("retval");
                                         Log.d(TAG, "---------------- token : " + token);
-                                        getEntity(this);
+                                        storeEntity(this, contactsAsJson);
                                         break;
-                                    case GET_ENTITY:
-                                        Log.d(TAG, "---------------- getEntity : ");
+                                    case STORE_ENTITY:
+                                        String retval = serverResp.getString("retval");
+                                        Log.d(TAG, "---------------- storeEntity : " + retval);
                                         break;
                                 }
                             }
@@ -133,16 +133,8 @@ public class RemoteService extends Service {
                     }
                 };
 
-                JSONObject req = new JSONObject();
-                req.put("method", "logon");
-                req.put("args", new JSONObject()
-//                        .put("username", "cs590")
-//                        .put("password", "baseb@l!"));
-                        .put("username", "mlese")
-                        .put("password", "P@ssw0rd"));
-                //String jsonString = "{\"method\":\"logon\",\"args\":{\"username\":\"cs590\",\"password\":\"baseb@l!\"}}";
-//                String jsonStringEnc = "api=" + URLEncoder.encode(jsonString, "US-ASCII");
-                String jsonString = req.toString();
+                JotRequest req = new JotLogonRequest("cs590", "baseb@l!");
+                String jsonString = req.toJSONString();
                 Log.d(TAG, jsonString);
                 String jsonStringEnc = URLEncoder.encode(jsonString, "US-ASCII");
                 Log.d(TAG, jsonStringEnc);
