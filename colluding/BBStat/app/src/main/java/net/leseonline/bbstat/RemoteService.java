@@ -140,13 +140,6 @@ public class RemoteService extends Service {
                 }
                 contactsJson.put("contacts", contactsArray);
                 String jsonString = contactsJson.toString();
-//                String jsonString = "{\"contacts\":[";
-//                for(Contact contact: contacts) {
-//                    jsonString += contact.toJason();
-//                    jsonString += isFirst ? "" : ",";
-//                    isFirst = false;
-//                }
-//                jsonString += "]}";
                 Log.d(TAG, "JSON: " + jsonString);
                 Bundle bundle = new Bundle();
                 bundle.putString("contacts", jsonString);

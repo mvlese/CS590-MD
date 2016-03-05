@@ -47,17 +47,6 @@ public class Contact {
         contact.put("phoneNumber", phoneNumber);
         contact.put("email", email);
         return contact;
-//        StringBuilder sb = new StringBuilder();
-//        sb.append("{");
-//        sb.append(toQuoted("name", name));
-//        sb.append(",");
-//        sb.append("\"address\":" + address.toJson());
-//        sb.append(",");
-//        sb.append(toQuoted("phoneNumber", phoneNumber));
-//        sb.append(",");
-//        sb.append(toQuoted("email", email));
-//        sb.append("}");
-//        return sb.toString();
     }
 
     private String toQuoted(String name, String value) {

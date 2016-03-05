@@ -1,5 +1,8 @@
 package net.leseonline.bbstat.contact;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 /**
  * Created by mvlese on 2/21/2016.
  */
@@ -45,20 +48,14 @@ public class Address {
         this.zip = zip;
     }
 
-    public String toJson() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("{");
-        sb.append(toQuoted("address1", address1));
-        sb.append(",");
-        sb.append(toQuoted("address2", address2));
-        sb.append(",");
-        sb.append(toQuoted("city", city));
-        sb.append(",");
-        sb.append(toQuoted("state", state));
-        sb.append(",");
-        sb.append(toQuoted("zip", zip));
-        sb.append("}");
-        return sb.toString();
+    public JSONObject toJson() throws JSONException {
+        JSONObject contact = new JSONObject();
+        contact.put("address1", address1);
+        contact.put("address2", address2);
+        contact.put("city", city);
+        contact.put("state", state);
+        contact.put("zip", zip);
+        return contact;
     }
 
     private String toQuoted(String name, String value) {
