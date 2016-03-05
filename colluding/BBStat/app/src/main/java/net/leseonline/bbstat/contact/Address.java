@@ -58,10 +58,6 @@ public class Address {
         return contact;
     }
 
-    private String toQuoted(String name, String value) {
-        return "\"" + name + "\" : \"" + value + "\"";
-    }
-
     private String address1 = "";
     private String address2 = "";
     private String city = "";

@@ -49,10 +49,6 @@ public class Contact {
         return contact;
     }
 
-    private String toQuoted(String name, String value) {
-        return "\"" + name + "\" : \"" + value + "\"";
-    }
-
     private Address address = new Address();
     private String name = "";
     private String phoneNumber = "";
