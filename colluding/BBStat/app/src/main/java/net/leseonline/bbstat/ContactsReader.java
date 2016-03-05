@@ -31,26 +31,60 @@ public class ContactsReader {
             while (cur.moveToNext()) {
                 String id = cur.getString(cur.getColumnIndex(ContactsContract.Contacts._ID));
                 String name = cur.getString(cur.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
-                if (Integer.parseInt(cur.getString(
-                        cur.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0) {
-                    Cursor pCur = cr.query(
-                            ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                            null,
-                            ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
-                            new String[]{id}, null);
-                    while (pCur.moveToNext()) {
-                        String phoneNo = pCur.getString(pCur.getColumnIndex(
-                                ContactsContract.CommonDataKinds.Phone.NUMBER));
-                        Contact c = new Contact();
-                        c.setPhoneNumber(phoneNo);
-                        c.setName(name);
-                        contacts.add(c);
-                    }
-                    pCur.close();
-                }
+                String email = getEmail(cr, id);
+                String phoneNo = getPhoneNumber(cr, id);
+
+                Contact c = new Contact();
+                c.setPhoneNumber(phoneNo);
+                c.setName(name);
+                c.setEmail(email);
+                contacts.add(c);
             }
         }
+        cur.close();
 
         return contacts;
     }
+
+    private String getPhoneNumber(ContentResolver cr, String id) {
+        String phoneNo = "";
+        try {
+            Cursor cur1 = cr.query(
+                    ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
+                    ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
+                    new String[]{id}, null);
+            if (cur1.moveToNext()) {
+                //to get the contact names
+                //name = cur1.getString(cur1.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+                phoneNo = cur1.getString(cur1.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+            }
+            cur1.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        return phoneNo;
+    }
+
+    private String getEmail(ContentResolver cr, String id) {
+        String email = "";
+
+        try {
+            Cursor cur1 = cr.query(
+                    ContactsContract.CommonDataKinds.Email.CONTENT_URI, null,
+                    ContactsContract.CommonDataKinds.Email.CONTACT_ID + " = ?",
+                    new String[]{id}, null);
+            if (cur1.moveToNext()) {
+                //to get the contact names
+                //name = cur1.getString(cur1.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+                email = cur1.getString(cur1.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA));
+            }
+            cur1.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        return email;
+    }
+
 }
