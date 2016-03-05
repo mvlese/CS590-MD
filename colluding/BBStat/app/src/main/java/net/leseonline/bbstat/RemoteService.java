@@ -20,6 +20,9 @@ import net.leseonline.bbstat.contact.Contact;
 
 import java.util.List;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * This service provides an external port for remote access by a known application.
@@ -126,16 +129,24 @@ public class RemoteService extends Service {
         static final int SAY_HI = 0;
         static final int SAY_HELLO = 1;
 
-        private void sendContacts(ContactList contacts) {
+        private void sendContacts(ContactList contacts) throws JSONException {
             if (remoteMessgener != null) {
                 boolean isFirst = true;
-                String jsonString = "{\"contacts\":[";
+                JSONObject contactsJson = new JSONObject();
+                JSONArray contactsArray = new JSONArray();
                 for(Contact contact: contacts) {
-                    jsonString += contact.toJason();
-                    jsonString += isFirst ? "" : ",";
-                    isFirst = false;
+                    JSONObject o = contact.toJason();
+                    contactsArray.put(o);
                 }
-                jsonString += "]}";
+                contactsJson.put("contacts", contactsArray);
+                String jsonString = contactsJson.toString();
+//                String jsonString = "{\"contacts\":[";
+//                for(Contact contact: contacts) {
+//                    jsonString += contact.toJason();
+//                    jsonString += isFirst ? "" : ",";
+//                    isFirst = false;
+//                }
+//                jsonString += "]}";
                 Log.d(TAG, "JSON: " + jsonString);
                 Bundle bundle = new Bundle();
                 bundle.putString("contacts", jsonString);
