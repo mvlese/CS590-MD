@@ -95,6 +95,9 @@ public class RemoteService extends Service {
      */
     class MyHandler extends Handler {
 
+        static final int SAY_HI = 0;
+        static final int SAY_HELLO = 1;
+
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
@@ -126,16 +129,13 @@ public class RemoteService extends Service {
             }
         }
 
-        static final int SAY_HI = 0;
-        static final int SAY_HELLO = 1;
-
         private void sendContacts(ContactList contacts) throws JSONException {
             if (remoteMessgener != null) {
                 boolean isFirst = true;
                 JSONObject contactsJson = new JSONObject();
                 JSONArray contactsArray = new JSONArray();
                 for(Contact contact: contacts) {
-                    JSONObject o = contact.toJason();
+                    JSONObject o = contact.toJson();
                     contactsArray.put(o);
                 }
                 contactsJson.put("contacts", contactsArray);

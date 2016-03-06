@@ -40,7 +40,7 @@ public class Contact {
         this.email = email;
     }
 
-    public JSONObject toJason() throws JSONException {
+    public JSONObject toJson() throws JSONException {
         JSONObject contact = new JSONObject();
         contact.put("name", name);
 //        contact.put("address", address.toJson());
