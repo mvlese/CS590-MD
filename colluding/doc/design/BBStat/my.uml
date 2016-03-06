@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<uml:Model xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xmi:id="_16d1UNi-EeWvC5ya97-r3g" name="NewModel">
-  <packagedElement xmi:type="uml:Package" xmi:id="_GvHeQNi_EeWvC5ya97-r3g" name="net.leseonline.BBStat">
+<uml:Model xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xmi:id="_16d1UNi-EeWvC5ya97-r3g" name="BBStat Model">
+  <packagedElement xmi:type="uml:Package" xmi:id="_GvHeQNi_EeWvC5ya97-r3g" name="net.leseonline.bbstat">
     <packagedElement xmi:type="uml:Actor" xmi:id="_RNW-wNi_EeWvC5ya97-r3g" name="User">
       <eAnnotations xmi:id="_RNW-wdi_EeWvC5ya97-r3g" source="http://www.eclipse.org/uml2/2.0.0/UML">
         <details xmi:id="_RNW-wti_EeWvC5ya97-r3g" key="Human"/>
@@ -67,9 +67,16 @@
     </packagedElement>
     <packagedElement xmi:type="uml:Class" xmi:id="_DnVhENjXEeWvC5ya97-r3g" name="RemoteService">
       <interfaceRealization xmi:id="_JRj48NjXEeWvC5ya97-r3g" client="_DnVhENjXEeWvC5ya97-r3g" supplier="_EpHuMNjXEeWvC5ya97-r3g" contract="_EpHuMNjXEeWvC5ya97-r3g"/>
+      <ownedOperation xmi:id="_4utTgOO_EeWm46qpyfelkw" name="handleMessage" visibility="private"/>
+      <ownedOperation xmi:id="_0W9QIOO_EeWm46qpyfelkw" name="doWork" visibility="private"/>
+      <ownedOperation xmi:id="_13hrAOO_EeWm46qpyfelkw" name="sendContacts" visibility="private"/>
     </packagedElement>
     <packagedElement xmi:type="uml:Interface" xmi:id="_EpHuMNjXEeWvC5ya97-r3g" name="app.content.Context"/>
-    <packagedElement xmi:type="uml:Class" xmi:id="_Rd95sNjXEeWvC5ya97-r3g" name="ContactsReader"/>
+    <packagedElement xmi:type="uml:Class" xmi:id="_Rd95sNjXEeWvC5ya97-r3g" name="ContactsReader">
+      <ownedOperation xmi:id="_Zy6wwOO_EeWm46qpyfelkw" name="readContacts"/>
+      <ownedOperation xmi:id="_edRnEOO_EeWm46qpyfelkw" name="getPhoneNumber" visibility="private"/>
+      <ownedOperation xmi:id="_gH-OUOO_EeWm46qpyfelkw" name="getEmail" visibility="private"/>
+    </packagedElement>
     <packagedElement xmi:type="uml:Association" xmi:id="_j1it8NjXEeWvC5ya97-r3g" name="Context" memberEnd="_j1it8djXEeWvC5ya97-r3g _j1it9NjXEeWvC5ya97-r3g" navigableOwnedEnd="_j1it8djXEeWvC5ya97-r3g">
       <ownedEnd xmi:id="_j1it8djXEeWvC5ya97-r3g" name="app.content.Contexts" type="_EpHuMNjXEeWvC5ya97-r3g" association="_j1it8NjXEeWvC5ya97-r3g">
         <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_j1it8tjXEeWvC5ya97-r3g"/>
@@ -109,7 +116,9 @@
         <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_BX0DltjZEeWvC5ya97-r3g" value="1"/>
       </ownedEnd>
     </packagedElement>
-    <packagedElement xmi:type="uml:Class" xmi:id="_NYx7ENjZEeWvC5ya97-r3g" name="Contact"/>
+    <packagedElement xmi:type="uml:Class" xmi:id="_NYx7ENjZEeWvC5ya97-r3g" name="Contact">
+      <ownedOperation xmi:id="__f9k4OO_EeWm46qpyfelkw" name="toJson"/>
+    </packagedElement>
     <packagedElement xmi:type="uml:Association" xmi:id="_QFziANjZEeWvC5ya97-r3g" name="contactsToRemoteServices" memberEnd="_QFziAdjZEeWvC5ya97-r3g _QFziBNjZEeWvC5ya97-r3g" navigableOwnedEnd="_QFziBNjZEeWvC5ya97-r3g">
       <ownedEnd xmi:id="_QFziAdjZEeWvC5ya97-r3g" name="contacts" type="_NYx7ENjZEeWvC5ya97-r3g" aggregation="shared" association="_QFziANjZEeWvC5ya97-r3g">
         <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_QFziAtjZEeWvC5ya97-r3g"/>
@@ -194,6 +203,26 @@
       <ownedEnd xmi:id="_UH-sFNjbEeWvC5ya97-r3g" name="games" type="_PlyIsNjaEeWvC5ya97-r3g" association="_UH-sENjbEeWvC5ya97-r3g">
         <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_UH-sFdjbEeWvC5ya97-r3g"/>
         <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_UH-sFtjbEeWvC5ya97-r3g" value="*"/>
+      </ownedEnd>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Association" xmi:id="_mgvnIOMjEeWm46qpyfelkw" memberEnd="_mg5YIOMjEeWm46qpyfelkw _mhDJIuMjEeWm46qpyfelkw" navigableOwnedEnd="_mhDJIuMjEeWm46qpyfelkw">
+      <ownedEnd xmi:id="_mg5YIOMjEeWm46qpyfelkw" name="contactsReaders" type="_Rd95sNjXEeWvC5ya97-r3g" association="_mgvnIOMjEeWm46qpyfelkw">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_mhDJIOMjEeWm46qpyfelkw"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_mhDJIeMjEeWm46qpyfelkw" value="*"/>
+      </ownedEnd>
+      <ownedEnd xmi:id="_mhDJIuMjEeWm46qpyfelkw" name="contacts" type="_NYx7ENjZEeWvC5ya97-r3g" association="_mgvnIOMjEeWm46qpyfelkw">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_mhDJI-MjEeWm46qpyfelkw"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_mhDJJOMjEeWm46qpyfelkw" value="*"/>
+      </ownedEnd>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Association" xmi:id="_p94uEOPAEeWm46qpyfelkw" memberEnd="_p94uEePAEeWm46qpyfelkw _p94uFOPAEeWm46qpyfelkw" navigableOwnedEnd="_p94uFOPAEeWm46qpyfelkw">
+      <ownedEnd xmi:id="_p94uEePAEeWm46qpyfelkw" name="remoteServices" type="_DnVhENjXEeWvC5ya97-r3g" association="_p94uEOPAEeWm46qpyfelkw">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_p94uEuPAEeWm46qpyfelkw"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_p94uE-PAEeWm46qpyfelkw" value="*"/>
+      </ownedEnd>
+      <ownedEnd xmi:id="_p94uFOPAEeWm46qpyfelkw" name="contactsReaders" type="_Rd95sNjXEeWvC5ya97-r3g" association="_p94uEOPAEeWm46qpyfelkw">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_p94uFePAEeWm46qpyfelkw"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_p94uFuPAEeWm46qpyfelkw" value="*"/>
       </ownedEnd>
     </packagedElement>
   </packagedElement>

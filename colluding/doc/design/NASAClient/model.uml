@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Model xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xmi:id="_yulScOMiEeWm46qpyfelkw" name="NASA Client Model">
+  <packagedElement xmi:type="uml:Package" xmi:id="_5XJFYOMjEeWm46qpyfelkw" name="net.leseonline.nasaclient">
+    <packagedElement xmi:type="uml:Class" xmi:id="_LwhQcOMkEeWm46qpyfelkw" name="MainActivity">
+      <ownedOperation xmi:id="_PKyNEOPCEeWm46qpyfelkw" name="getRemoteContacts" visibility="private"/>
+      <ownedOperation xmi:id="_Y559wOPCEeWm46qpyfelkw" name="startRemoteService" visibility="private"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Class" xmi:id="_h_RxoOMkEeWm46qpyfelkw" name="HttpUtils">
+      <ownedOperation xmi:id="_sRkygOPBEeWm46qpyfelkw" name="post" isStatic="true"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Class" xmi:id="_jmPvcOMkEeWm46qpyfelkw" name="JotRequest" isAbstract="true"/>
+    <packagedElement xmi:type="uml:Class" xmi:id="_olIEQOMkEeWm46qpyfelkw" name="JotLogonRequest">
+      <generalization xmi:id="_qlINIOMkEeWm46qpyfelkw" general="_jmPvcOMkEeWm46qpyfelkw"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Class" xmi:id="_raB00OMkEeWm46qpyfelkw" name="JotStoreEntityRequest">
+      <generalization xmi:id="_thepgOMkEeWm46qpyfelkw" general="_jmPvcOMkEeWm46qpyfelkw"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Class" xmi:id="_xJWIEOMkEeWm46qpyfelkw" name="RemoteService">
+      <ownedOperation xmi:id="_yM2fIOO2EeWm46qpyfelkw" name="receiveMessage"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Association" xmi:id="_CLgokOMlEeWm46qpyfelkw" name="jotRequestsToRemoteServices" memberEnd="_CLgokeMlEeWm46qpyfelkw _CLgolOMlEeWm46qpyfelkw" navigableOwnedEnd="_CLgolOMlEeWm46qpyfelkw">
+      <ownedEnd xmi:id="_CLgokeMlEeWm46qpyfelkw" name="jotRequests" type="_jmPvcOMkEeWm46qpyfelkw" aggregation="shared" association="_CLgokOMlEeWm46qpyfelkw">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_CLgokuMlEeWm46qpyfelkw"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_CLgok-MlEeWm46qpyfelkw" value="*"/>
+      </ownedEnd>
+      <ownedEnd xmi:id="_CLgolOMlEeWm46qpyfelkw" name="remoteServices" type="_xJWIEOMkEeWm46qpyfelkw" association="_CLgokOMlEeWm46qpyfelkw">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_CLgoleMlEeWm46qpyfelkw"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_CLgoluMlEeWm46qpyfelkw" value="*"/>
+      </ownedEnd>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Association" xmi:id="_DGXuUOMlEeWm46qpyfelkw" name="httpUtilssToRemoteServices" memberEnd="_DGhfUOMlEeWm46qpyfelkw _DGhfU-MlEeWm46qpyfelkw" navigableOwnedEnd="_DGhfU-MlEeWm46qpyfelkw">
+      <ownedEnd xmi:id="_DGhfUOMlEeWm46qpyfelkw" name="httpUtilss" type="_h_RxoOMkEeWm46qpyfelkw" aggregation="shared" association="_DGXuUOMlEeWm46qpyfelkw">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_DGhfUeMlEeWm46qpyfelkw"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_DGhfUuMlEeWm46qpyfelkw" value="*"/>
+      </ownedEnd>
+      <ownedEnd xmi:id="_DGhfU-MlEeWm46qpyfelkw" name="remoteServices" type="_xJWIEOMkEeWm46qpyfelkw" association="_DGXuUOMlEeWm46qpyfelkw">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_DGqpQOMlEeWm46qpyfelkw"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_DGqpQeMlEeWm46qpyfelkw" value="*"/>
+      </ownedEnd>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Association" xmi:id="_wGorcOO0EeWm46qpyfelkw">
+      <name xsi:nil="true"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Association" xmi:id="_6jP0QOO0EeWm46qpyfelkw" memberEnd="_6jP0QeO0EeWm46qpyfelkw _6jP0ROO0EeWm46qpyfelkw" navigableOwnedEnd="_6jP0ROO0EeWm46qpyfelkw">
+      <ownedEnd xmi:id="_6jP0QeO0EeWm46qpyfelkw" name="remoteServices" type="_xJWIEOMkEeWm46qpyfelkw" association="_6jP0QOO0EeWm46qpyfelkw">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_6jP0QuO0EeWm46qpyfelkw"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_6jP0Q-O0EeWm46qpyfelkw" value="*"/>
+      </ownedEnd>
+      <ownedEnd xmi:id="_6jP0ROO0EeWm46qpyfelkw" name="jotLogonRequests" type="_olIEQOMkEeWm46qpyfelkw" association="_6jP0QOO0EeWm46qpyfelkw">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_6jP0ReO0EeWm46qpyfelkw"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_6jP0RuO0EeWm46qpyfelkw" value="*"/>
+      </ownedEnd>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Association" xmi:id="_9dXcAOO0EeWm46qpyfelkw" memberEnd="_9dXcAeO0EeWm46qpyfelkw _9dXcBOO0EeWm46qpyfelkw" navigableOwnedEnd="_9dXcBOO0EeWm46qpyfelkw">
+      <ownedEnd xmi:id="_9dXcAeO0EeWm46qpyfelkw" name="remoteServices" type="_xJWIEOMkEeWm46qpyfelkw" association="_9dXcAOO0EeWm46qpyfelkw">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_9dXcAuO0EeWm46qpyfelkw"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_9dXcA-O0EeWm46qpyfelkw" value="*"/>
+      </ownedEnd>
+      <ownedEnd xmi:id="_9dXcBOO0EeWm46qpyfelkw" name="jotRequests" type="_jmPvcOMkEeWm46qpyfelkw" association="_9dXcAOO0EeWm46qpyfelkw">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_9dXcBeO0EeWm46qpyfelkw"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_9dXcBuO0EeWm46qpyfelkw" value="*"/>
+      </ownedEnd>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Association" xmi:id="_96bLcOO0EeWm46qpyfelkw" memberEnd="_96bLceO0EeWm46qpyfelkw _96bLdOO0EeWm46qpyfelkw" navigableOwnedEnd="_96bLdOO0EeWm46qpyfelkw">
+      <ownedEnd xmi:id="_96bLceO0EeWm46qpyfelkw" name="remoteServices" type="_xJWIEOMkEeWm46qpyfelkw" association="_96bLcOO0EeWm46qpyfelkw">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_96bLcuO0EeWm46qpyfelkw"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_96bLc-O0EeWm46qpyfelkw" value="*"/>
+      </ownedEnd>
+      <ownedEnd xmi:id="_96bLdOO0EeWm46qpyfelkw" name="jotStoreEntityRequests" type="_raB00OMkEeWm46qpyfelkw" association="_96bLcOO0EeWm46qpyfelkw">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_96bLdeO0EeWm46qpyfelkw"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_96bLduO0EeWm46qpyfelkw" value="*"/>
+      </ownedEnd>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Dependency" xmi:id="_YQVvQOO1EeWm46qpyfelkw" client="_5XJFYOMjEeWm46qpyfelkw" supplier="_KK0mEOO1EeWm46qpyfelkw"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:StateMachine" xmi:id="_TgA2QOMlEeWm46qpyfelkw" name="RemoteService statemachine">
+    <region xmi:id="_TgA2QeMlEeWm46qpyfelkw" name="Region1">
+      <transition xmi:id="_G5vc0OMmEeWm46qpyfelkw" source="_4F3_4OMlEeWm46qpyfelkw" target="_C96gcOMmEeWm46qpyfelkw">
+        <name xsi:nil="true"/>
+        <trigger xmi:id="_JuMhcOMmEeWm46qpyfelkw" name="onRemoteClientRequest"/>
+      </transition>
+      <transition xmi:id="_Qomu0OMmEeWm46qpyfelkw" source="_C96gcOMmEeWm46qpyfelkw" target="_DTquAOMmEeWm46qpyfelkw">
+        <name xsi:nil="true"/>
+        <trigger xmi:id="_W30DEOMmEeWm46qpyfelkw" name="onSuccessfulLogon"/>
+      </transition>
+      <transition xmi:id="_jGke8OMmEeWm46qpyfelkw" source="_C96gcOMmEeWm46qpyfelkw" target="_4F3_4OMlEeWm46qpyfelkw">
+        <name xsi:nil="true"/>
+        <trigger xmi:id="_m7F5cOMmEeWm46qpyfelkw" name="onFailedLogon"/>
+      </transition>
+      <transition xmi:id="_j8gocOMmEeWm46qpyfelkw" source="_DTquAOMmEeWm46qpyfelkw" target="_4F3_4OMlEeWm46qpyfelkw">
+        <name xsi:nil="true"/>
+        <trigger xmi:id="_y4anEOMmEeWm46qpyfelkw" name="onStoreEntityDone"/>
+      </transition>
+      <transition xmi:id="_2Hi1gOMmEeWm46qpyfelkw" source="_4F3_4OMlEeWm46qpyfelkw" target="_4F3_4OMlEeWm46qpyfelkw"/>
+      <subvertex xmi:type="uml:State" xmi:id="_4F3_4OMlEeWm46qpyfelkw" name="IdleState"/>
+      <subvertex xmi:type="uml:State" xmi:id="_C96gcOMmEeWm46qpyfelkw" name="LogonState"/>
+      <subvertex xmi:type="uml:State" xmi:id="_DTquAOMmEeWm46qpyfelkw" name="StoreEntityState"/>
+    </region>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Interaction" xmi:id="_A4vMIOO0EeWm46qpyfelkw" name="Scenario_0">
+    <ownedAttribute xmi:id="_FSNt0OO0EeWm46qpyfelkw" name="MainActivity" type="_LwhQcOMkEeWm46qpyfelkw"/>
+    <ownedAttribute xmi:id="_MZmAMuO0EeWm46qpyfelkw" name="Class1" type="_MZmAMOO0EeWm46qpyfelkw"/>
+    <ownedAttribute xmi:id="_ikA-guO1EeWm46qpyfelkw" name="Class1"/>
+    <ownedAttribute xmi:id="_meWtIOO1EeWm46qpyfelkw" name="RemoteService" type="_MZmAMOO0EeWm46qpyfelkw"/>
+    <ownedAttribute xmi:id="_qgvkgOO1EeWm46qpyfelkw" name="RemoteService" type="_xJWIEOMkEeWm46qpyfelkw"/>
+    <ownedAttribute xmi:id="_s3Ph0OO1EeWm46qpyfelkw" name="HttpUtils" type="_h_RxoOMkEeWm46qpyfelkw"/>
+    <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_ryBwweO2EeWm46qpyfelkw" name="Operation_2"/>
+    <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_yNAQIeO2EeWm46qpyfelkw" name="Operation_1"/>
+    <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_3fQz8uO2EeWm46qpyfelkw" name="Operation_1"/>
+    <lifeline xmi:id="_FSNt0eO0EeWm46qpyfelkw" name="MainActivity" represents="_FSNt0OO0EeWm46qpyfelkw" coveredBy="_ryBww-O2EeWm46qpyfelkw _ryBwx-O2EeWm46qpyfelkw"/>
+    <lifeline xmi:id="_meWtIeO1EeWm46qpyfelkw" name="RemoteService" represents="_meWtIOO1EeWm46qpyfelkw" coveredBy="_ryBwxOO2EeWm46qpyfelkw _ryBwxuO2EeWm46qpyfelkw _ryBwxeO2EeWm46qpyfelkw _yNAQI-O2EeWm46qpyfelkw _yNAQJ-O2EeWm46qpyfelkw"/>
+    <lifeline xmi:id="_qgvkgeO1EeWm46qpyfelkw" name="RemoteService" represents="_qgvkgOO1EeWm46qpyfelkw" coveredBy="_yNAQJOO2EeWm46qpyfelkw _yNAQJuO2EeWm46qpyfelkw _yNAQJeO2EeWm46qpyfelkw _3fZ94eO2EeWm46qpyfelkw _3fZ95eO2EeWm46qpyfelkw"/>
+    <lifeline xmi:id="_s3Ph0eO1EeWm46qpyfelkw" name="HttpUtils" represents="_s3Ph0OO1EeWm46qpyfelkw" coveredBy="_3fZ94uO2EeWm46qpyfelkw _3fZ95OO2EeWm46qpyfelkw _3fZ94-O2EeWm46qpyfelkw"/>
+    <fragment xmi:type="uml:MessageOccurrenceSpecification" xmi:id="_ryBww-O2EeWm46qpyfelkw" name="Operation_2_sender" covered="_FSNt0eO0EeWm46qpyfelkw" message="_ryBwwOO2EeWm46qpyfelkw"/>
+    <fragment xmi:type="uml:MessageOccurrenceSpecification" xmi:id="_ryBwxOO2EeWm46qpyfelkw" name="Operation_2_receiver" covered="_meWtIeO1EeWm46qpyfelkw" message="_ryBwwOO2EeWm46qpyfelkw"/>
+    <fragment xmi:type="uml:BehaviorExecutionSpecification" xmi:id="_ryBwxuO2EeWm46qpyfelkw" name="Operation_2" covered="_meWtIeO1EeWm46qpyfelkw" finish="_ryBwxeO2EeWm46qpyfelkw" start="_ryBwxOO2EeWm46qpyfelkw" behavior="_ryBwweO2EeWm46qpyfelkw"/>
+    <fragment xmi:type="uml:MessageOccurrenceSpecification" xmi:id="_yNAQI-O2EeWm46qpyfelkw" name="Operation_1_sender" covered="_meWtIeO1EeWm46qpyfelkw" message="_yNAQIOO2EeWm46qpyfelkw"/>
+    <fragment xmi:type="uml:MessageOccurrenceSpecification" xmi:id="_yNAQJOO2EeWm46qpyfelkw" name="Operation_1_receiver" covered="_qgvkgeO1EeWm46qpyfelkw" message="_yNAQIOO2EeWm46qpyfelkw"/>
+    <fragment xmi:type="uml:BehaviorExecutionSpecification" xmi:id="_yNAQJuO2EeWm46qpyfelkw" name="Operation_1" covered="_qgvkgeO1EeWm46qpyfelkw" finish="_yNAQJeO2EeWm46qpyfelkw" start="_yNAQJOO2EeWm46qpyfelkw" behavior="_yNAQIeO2EeWm46qpyfelkw"/>
+    <fragment xmi:type="uml:MessageOccurrenceSpecification" xmi:id="_3fZ94eO2EeWm46qpyfelkw" name="Operation_1_sender" covered="_qgvkgeO1EeWm46qpyfelkw" message="_3fQz8eO2EeWm46qpyfelkw"/>
+    <fragment xmi:type="uml:MessageOccurrenceSpecification" xmi:id="_3fZ94uO2EeWm46qpyfelkw" name="Operation_1_receiver" covered="_s3Ph0eO1EeWm46qpyfelkw" message="_3fQz8eO2EeWm46qpyfelkw"/>
+    <fragment xmi:type="uml:BehaviorExecutionSpecification" xmi:id="_3fZ95OO2EeWm46qpyfelkw" name="Operation_1" covered="_s3Ph0eO1EeWm46qpyfelkw" finish="_3fZ94-O2EeWm46qpyfelkw" start="_3fZ94uO2EeWm46qpyfelkw" behavior="_3fQz8uO2EeWm46qpyfelkw"/>
+    <fragment xmi:type="uml:MessageOccurrenceSpecification" xmi:id="_3fZ94-O2EeWm46qpyfelkw" name="Operation_1_reply_sender" covered="_s3Ph0eO1EeWm46qpyfelkw" message="_3fZ94OO2EeWm46qpyfelkw"/>
+    <fragment xmi:type="uml:MessageOccurrenceSpecification" xmi:id="_3fZ95eO2EeWm46qpyfelkw" name="Operation_1_reply_receiver" covered="_qgvkgeO1EeWm46qpyfelkw" message="_3fZ94OO2EeWm46qpyfelkw"/>
+    <fragment xmi:type="uml:MessageOccurrenceSpecification" xmi:id="_yNAQJeO2EeWm46qpyfelkw" name="Operation_1_reply_sender" covered="_qgvkgeO1EeWm46qpyfelkw" message="_yNAQIuO2EeWm46qpyfelkw"/>
+    <fragment xmi:type="uml:MessageOccurrenceSpecification" xmi:id="_yNAQJ-O2EeWm46qpyfelkw" name="Operation_1_reply_receiver" covered="_meWtIeO1EeWm46qpyfelkw" message="_yNAQIuO2EeWm46qpyfelkw"/>
+    <fragment xmi:type="uml:MessageOccurrenceSpecification" xmi:id="_ryBwxeO2EeWm46qpyfelkw" name="Operation_2_reply_sender" covered="_meWtIeO1EeWm46qpyfelkw" message="_ryBwwuO2EeWm46qpyfelkw"/>
+    <fragment xmi:type="uml:MessageOccurrenceSpecification" xmi:id="_ryBwx-O2EeWm46qpyfelkw" name="Operation_2_reply_receiver" covered="_FSNt0eO0EeWm46qpyfelkw" message="_ryBwwuO2EeWm46qpyfelkw"/>
+    <message xmi:id="_ryBwwOO2EeWm46qpyfelkw" name="Operation_2" receiveEvent="_ryBwxOO2EeWm46qpyfelkw" sendEvent="_ryBww-O2EeWm46qpyfelkw"/>
+    <message xmi:id="_ryBwwuO2EeWm46qpyfelkw" name="Operation_2_reply" messageSort="reply" receiveEvent="_ryBwx-O2EeWm46qpyfelkw" sendEvent="_ryBwxeO2EeWm46qpyfelkw"/>
+    <message xmi:id="_yNAQIOO2EeWm46qpyfelkw" name="Operation_1" receiveEvent="_yNAQJOO2EeWm46qpyfelkw" sendEvent="_yNAQI-O2EeWm46qpyfelkw" signature="_yM2fIOO2EeWm46qpyfelkw"/>
+    <message xmi:id="_yNAQIuO2EeWm46qpyfelkw" name="Operation_1_reply" messageSort="reply" receiveEvent="_yNAQJ-O2EeWm46qpyfelkw" sendEvent="_yNAQJeO2EeWm46qpyfelkw"/>
+    <message xmi:id="_3fQz8eO2EeWm46qpyfelkw" name="Operation_1" receiveEvent="_3fZ94uO2EeWm46qpyfelkw" sendEvent="_3fZ94eO2EeWm46qpyfelkw"/>
+    <message xmi:id="_3fZ94OO2EeWm46qpyfelkw" name="Operation_1_reply" messageSort="reply" receiveEvent="_3fZ95eO2EeWm46qpyfelkw" sendEvent="_3fZ94-O2EeWm46qpyfelkw"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Package" xmi:id="_KK0mEOO1EeWm46qpyfelkw" name="net.leseonline.bbstat">
+    <packagedElement xmi:type="uml:Class" xmi:id="_MZmAMOO0EeWm46qpyfelkw" name="RemoteService">
+      <ownedOperation xmi:id="_j_b-MOO2EeWm46qpyfelkw" name="receiveMessage"/>
+    </packagedElement>
+  </packagedElement>
+</uml:Model>
