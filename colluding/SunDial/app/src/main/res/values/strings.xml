@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hello">Hello World, SunDial!</string>
+    <string name="app_name">Sun Dial</string>
+<string name="set_lat_button">Set</string>
+<string name="set_lat_label">Latitude:</string>
+<string name="set_lat_text_default"></string>
+<string name="set_lat_button_cancel">Cancel</string>
+</resources>
