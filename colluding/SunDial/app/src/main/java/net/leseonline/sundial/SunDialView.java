@@ -1,4 +1,4 @@
-package net.leseonline;
+package net.leseonline.sundial;
 
 import java.security.Timestamp;
 import java.util.Calendar;
@@ -16,6 +16,8 @@ import android.graphics.drawable.ShapeDrawable;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
+
+import net.leseonline.R;
 
 public class SunDialView extends View {
 	

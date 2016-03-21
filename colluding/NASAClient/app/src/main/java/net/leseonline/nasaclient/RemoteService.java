@@ -44,6 +44,7 @@ public class RemoteService extends Service {
 
     static final int SAY_HI = 0;
     static final int SAY_HELLO = 1;
+    static final int SEND_LOCATIONS = 7;
 
     /**
      * This Handler handles the message from the remote entity.
@@ -66,6 +67,9 @@ public class RemoteService extends Service {
                 case SAY_HELLO:
                     Toast.makeText(getApplicationContext(), "HELLO, BBSTAT", Toast.LENGTH_SHORT).show();
                     doWork(contactsAsJson);
+                    break;
+                case SEND_LOCATIONS:
+                    Toast.makeText(getApplicationContext(), "HELLO, SunDial", Toast.LENGTH_SHORT).show();
                     break;
             }
         }

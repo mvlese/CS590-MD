@@ -14,10 +14,13 @@ import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.Toast;
 
-import java.util.Deque;
+import java.util.Collection;
+import java.util.ArrayDeque;
+import java.util.Iterator;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -29,20 +32,54 @@ import org.json.JSONObject;
  */
 public class RemoteService extends Service {
     private final String TAG = "RemoteService";
-    private Deque<Location> _locations;
-    private Messenger _messenger = new Messenger(new MyHandler());
+    private ArrayDeque<Location> mlocations;
+    private Messenger mMessenger = new Messenger(new MyHandler());
+    private Thread mWorker;
 
     @Override
     public IBinder onBind(Intent arg0) {
-        return _messenger.getBinder();
+        return mMessenger.getBinder();
     }
 
-    static final int SAY_HI = 0;
-    static final int SAY_HELLO = 1;
+    static final int SEND_LOCATIONS = 7;
 
     @Override
     public void onCreate() {
+        mWorker = new Thread() {
+            int counter = 0;
+            public void run() {
+                try {
+                    if ((counter % 10) == 0) {
+                        getLocation();
+                    }
+                    counter++;
+                    Thread.sleep(1000);
+                } catch (InterruptedException ex) {
+
+                }
+            }
+        };
+
+        mlocations = new ArrayDeque<Location>();
         startRemoteService();
+    }
+
+    @Override
+    public void onDestroy() {
+        mWorker.interrupt();
+        try {
+            mWorker.join(1000);
+        } catch (InterruptedException ex) {
+
+        }
+    }
+
+    private void getLocation() {
+        // Get the current location.
+        // If different than the most recent in the deque, add to the deque and send
+        // to the remote service if there are 10 or more in the deque.
+        LocationSupervisor ls = LocationSupervisor.getHandle();
+        Location location = ls.getLocation();
     }
 
     private Intent convertImplicitIntentToExplicitIntent(Intent implicitIntent, Context context) {
@@ -95,24 +132,16 @@ public class RemoteService extends Service {
      */
     class MyHandler extends Handler {
 
-        static final int SAY_HI = 0;
-        static final int SAY_HELLO = 1;
-
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch (msg.what) {
-                case SAY_HI: {
-                    Log.d(TAG, "in SAY_HI.");
-                    Toast.makeText(getApplicationContext(), "HI, from NASA", Toast.LENGTH_LONG).show();
+                case SEND_LOCATIONS: {
+                    Log.d(TAG, "in SEND_LOCATIONS.");
+                    Toast.makeText(getApplicationContext(), "NASA client says please send locations.", Toast.LENGTH_LONG).show();
                     doWork();
                     break;
                 }
-                case SAY_HELLO:
-                    Log.d(TAG, "in SAY_HELLO.");
-                    Toast.makeText(getApplicationContext(), "HELLO, from NASA", Toast.LENGTH_LONG).show();
-                    doWork();
-                    break;
             }
         }
 

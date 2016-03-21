@@ -26,6 +26,9 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    private boolean isBound = false;
+    private Messenger mMessenger;
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -72,8 +75,6 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private boolean isBound = false;
-    private Messenger mMessenger;
     private ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
@@ -87,16 +88,16 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-            serviceConnection = null;
+            mMessenger = null;
             isBound = false;
         }
     };
 
     private void startRemoteService() {
         try {
-            Intent mIntent = new Intent();
-            mIntent.setAction("net.leseonline.bbstat.RemoteService");
-            Intent explicitIntent = convertImplicitIntentToExplicitIntent(mIntent, getApplicationContext());
+            Intent intent = new Intent();
+            intent.setAction("net.leseonline.bbstat.RemoteService");
+            Intent explicitIntent = convertImplicitIntentToExplicitIntent(intent, getApplicationContext());
             bindService(explicitIntent, serviceConnection, BIND_AUTO_CREATE);
         } catch(Exception ex) {
             ex.printStackTrace();

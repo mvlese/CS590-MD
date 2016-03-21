@@ -1,4 +1,4 @@
-package net.leseonline;
+package net.leseonline.sundial;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+
+import net.leseonline.R;
 
 public class LatitudeDialog extends Dialog {
 
