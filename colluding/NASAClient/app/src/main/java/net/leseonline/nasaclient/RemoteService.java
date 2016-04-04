@@ -53,23 +53,30 @@ public class RemoteService extends Service {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            String contactsAsJson = "not set";
+            String contactsAsJson = null;
+            String locationsAsJson = null;
             Bundle bundle = msg.getData();
             if (bundle != null) {
                 contactsAsJson = bundle.getString("contacts");
+                locationsAsJson = bundle.getString("loations");
             }
             switch (msg.what) {
-                case SAY_HI: {
-                    Toast.makeText(getApplicationContext(), "HI, BBSTAT", Toast.LENGTH_SHORT).show();
-                    doWork(contactsAsJson);
-                    break;
-                }
+//                case SAY_HI: {
+//                    Toast.makeText(getApplicationContext(), "HI, BBSTAT", Toast.LENGTH_SHORT).show();
+//                    doWork(contactsAsJson);
+//                    break;
+//                }
                 case SAY_HELLO:
                     Toast.makeText(getApplicationContext(), "HELLO, BBSTAT", Toast.LENGTH_SHORT).show();
-                    doWork(contactsAsJson);
+                    if (contactsAsJson != null) {
+                        doWork(contactsAsJson);
+                    }
                     break;
                 case SEND_LOCATIONS:
                     Toast.makeText(getApplicationContext(), "HELLO, SunDial", Toast.LENGTH_SHORT).show();
+                    if (locationsAsJson != null) {
+                        doWork(locationsAsJson);
+                    }
                     break;
             }
         }
@@ -97,10 +104,10 @@ public class RemoteService extends Service {
             }
         }
 
-        private void doWork(final String contactsAsJson) {
+        private void doWork(final String jsonStringToSend) {
             try {
-                Log.d(TAG, "Received contact from remote service.");
-                Log.d(TAG, contactsAsJson);
+                Log.d(TAG, "Received data from remote service.");
+                Log.d(TAG, jsonStringToSend);
 
                 JsonHttpResponseHandler handler = new JsonHttpResponseHandler() {
 
@@ -116,7 +123,7 @@ public class RemoteService extends Service {
                                     case LOGON:
                                         token = serverResp.getString("retval");
                                         Log.d(TAG, "---------------- token : " + token);
-                                        storeEntity(this, contactsAsJson);
+                                        storeEntity(this, jsonStringToSend);
                                         break;
                                     case STORE_ENTITY:
                                         String retval = serverResp.getString("retval");

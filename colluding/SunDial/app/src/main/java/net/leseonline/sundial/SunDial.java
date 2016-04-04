@@ -2,6 +2,7 @@ package net.leseonline.sundial;
 
 import java.util.ArrayDeque;
 import java.util.Arrays;
+import java.util.Deque;
 import java.util.Iterator;
 import java.util.List;
 import java.text.DecimalFormat;
@@ -28,13 +29,20 @@ import android.os.Bundle;
 import android.hardware.SensorListener;
 import android.hardware.SensorManager;
 import android.os.IBinder;
+import android.os.Message;
 import android.os.Messenger;
+import android.os.RemoteException;
 import android.support.v4.app.ActivityCompat;
+import android.telephony.TelephonyManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.util.Log;
 
 import net.leseonline.R;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class SunDial extends Activity implements SensorEventListener {
 	private SunDialView mSunDialView;
@@ -47,6 +55,8 @@ public class SunDial extends Activity implements SensorEventListener {
     private float mAzimuthAngle = Float.MIN_VALUE;
     private boolean mSendLocations = false;
 
+    private static final int SEND_LOCATIONS = 7;
+    static final int RECEIVE_LOCATIONS = 8;
     private static final String TAG = "Compass";
     private static final String LAT = "Latitude";
     private static final int DIALOG_SET_LAT = 1;
@@ -104,7 +114,7 @@ public class SunDial extends Activity implements SensorEventListener {
             }
         };
 
-        startRemoteService();
+        startLocalService();
         mWorker.start();
     }
 
@@ -193,6 +203,7 @@ public class SunDial extends Activity implements SensorEventListener {
         synchronized (mLockObject) {
             if (mSendLocations) {
                 mSendLocations = false;
+                //sendLocations();
             }
         }
     }
@@ -386,6 +397,17 @@ public class SunDial extends Activity implements SensorEventListener {
         Intent explicitIntent = new Intent(implicitIntent);
         explicitIntent.setComponent(component);
         return explicitIntent;
+    }
+
+    private void startLocalService() {
+        try {
+            Intent mIntent = new Intent();
+            mIntent.setAction("net.leseonline.sundial.LocalService");
+            Intent explicitIntent = convertImplicitIntentToExplicitIntent(mIntent, getApplicationContext());
+            bindService(explicitIntent, serviceConnection, BIND_AUTO_CREATE);
+        } catch(Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     private void startRemoteService() {
