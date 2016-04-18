@@ -1,11 +1,15 @@
 package net.leseonline.nasaclient;
 
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Message;
@@ -20,19 +24,37 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.net.URI;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
+
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.client.RestTemplate;
+
+import android.webkit.WebView;
+import android.widget.DatePicker;
+import android.widget.TextView;
+import android.widget.ImageView;
+
+import cz.msebera.android.httpclient.HttpRequest;
 
 public class MainActivity extends AppCompatActivity {
 
+    private String TAG = "MainActivity";
     private boolean isBound = false;
     private Messenger mMessenger;
+    private String mApiKey = "AObnhIGn0LH1lBDrjOd8g0p1jGbeG8zY9vJP8qXt";
+    private String mApodUrl = "https://api.nasa.gov/planetary/apod";
 
     @Override
     protected void onStart() {
         super.onStart();
         startRemoteService();
+        new HttpRequestTask().execute();
     }
 
     @Override
@@ -46,8 +68,6 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
                 getRemoteContacts();
             }
         });
@@ -68,11 +88,22 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_apod) {
+            return true;
+        } else if (id == R.id.action_apod_by_date) {
+            createDialog(999).show();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private Dialog createDialog(int id) {
+        Calendar cal = Calendar.getInstance();
+        int year = cal.get(Calendar.YEAR);
+        int month = cal.get(Calendar.MONTH);
+        int day = cal.get(Calendar.DAY_OF_MONTH);
+        return new DatePickerDialog(this, myDateListener, year, month, day);
     }
 
     private ServiceConnection serviceConnection = new ServiceConnection() {
@@ -125,9 +156,9 @@ public class MainActivity extends AppCompatActivity {
         if (mMessenger != null) {
             Message msg = Message.obtain(null, SAY_HELLO, 0, 0);
             try {
-                Log.d("nasa", "sending message");
+                Log.d(TAG, "sending message");
                 mMessenger.send(msg);
-                Log.d("nasa", "sent message");
+                Log.d(TAG, "sent message");
             } catch (RemoteException ex) {
                 ex.printStackTrace();
             } catch (Exception ex) {
@@ -136,4 +167,68 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private class HttpRequestTask extends AsyncTask<Void, Void, Apod> {
+
+        Date mDate = Calendar.getInstance().getTime();
+
+        public HttpRequestTask() {
+            mDate = Calendar.getInstance().getTime();
+        }
+
+        public HttpRequestTask(int year, int month, int day) {
+            Calendar cal = Calendar.getInstance();
+            cal.set(year, month, day);
+            mDate = cal.getTime();
+        }
+
+        @Override
+        protected Apod doInBackground(Void... params) {
+            try {
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+                String dateString = formatter.format(mDate);
+
+                RestTemplate restTemplate = new RestTemplate();
+                restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+                String url = mApodUrl + "?api_key=" + mApiKey + "&date=" + dateString;
+                Apod greeting = restTemplate.getForObject(url, Apod.class);
+                return greeting;
+            } catch (Exception e) {
+                Log.e(TAG, e.getMessage(), e);
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Apod apod) {
+            if (apod != null) {
+                Log.d(TAG, apod.getTitle());
+                TextView greetingIdText = (TextView) findViewById(R.id.id_title);
+                greetingIdText.setText(apod.getTitle());
+                if (apod.getCopyright() != null) {
+                    TextView copyrightText = (TextView) findViewById(R.id.id_copyright);
+                    copyrightText.setText("Copyright " + apod.getCopyright());
+                }
+                WebView webview = (WebView)findViewById(R.id.id_apod_image);
+                webview.getSettings().setLoadWithOverviewMode(true);
+                webview.getSettings().setUseWideViewPort(true);
+                webview.loadUrl(apod.getUrl());
+                getRemoteContacts();
+            }
+        }
+
+    }
+
+    private DatePickerDialog.OnDateSetListener myDateListener = new DatePickerDialog.OnDateSetListener() {
+        @Override
+        public void onDateSet(DatePicker arg0, int year, int month, int day) {
+            // TODO Auto-generated method stub
+            // arg1 = year
+            // arg2 = month
+            // arg3 = day
+            //showDate(arg1, arg2+1, arg3);
+            Log.d(TAG, "after datepicker selected");
+            new HttpRequestTask(year, month, day).execute();
+        }
+    };
 }

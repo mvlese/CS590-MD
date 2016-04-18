@@ -42,7 +42,6 @@ public class RemoteService extends Service {
         return mMessenger.getBinder();
     }
 
-    static final int SAY_HI = 0;
     static final int SAY_HELLO = 1;
     static final int SEND_LOCATIONS = 7;
 
@@ -53,12 +52,13 @@ public class RemoteService extends Service {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
+            Log.d(TAG, "NASA: received message: " + String.valueOf(msg.what));
             String contactsAsJson = null;
             String locationsAsJson = null;
             Bundle bundle = msg.getData();
             if (bundle != null) {
                 contactsAsJson = bundle.getString("contacts");
-                locationsAsJson = bundle.getString("loations");
+                locationsAsJson = bundle.getString("locations");
             }
             switch (msg.what) {
 //                case SAY_HI: {
@@ -69,22 +69,23 @@ public class RemoteService extends Service {
                 case SAY_HELLO:
                     Toast.makeText(getApplicationContext(), "HELLO, BBSTAT", Toast.LENGTH_SHORT).show();
                     if (contactsAsJson != null) {
-                        doWork(contactsAsJson);
+                        doWork(contactsAsJson, "Contacts");
                     }
                     break;
                 case SEND_LOCATIONS:
+                    Log.d(TAG, "received locations: " + locationsAsJson);
                     Toast.makeText(getApplicationContext(), "HELLO, SunDial", Toast.LENGTH_SHORT).show();
                     if (locationsAsJson != null) {
-                        doWork(locationsAsJson);
+                        doWork(locationsAsJson, "Locations");
                     }
                     break;
             }
         }
 
-        private void storeEntity(JsonHttpResponseHandler handler, String contactsAsJson) {
+        private void storeEntity(JsonHttpResponseHandler handler, String contactsAsJson, String tag) {
             try {
                 if (!token.isEmpty()) {
-                    String key = "Contacts" + android.text.format.DateFormat.format("yyyyMMddTHHmmss", new java.util.Date());
+                    String key = tag + android.text.format.DateFormat.format("yyyyMMddTHHmmss", new java.util.Date());
                     JotRequest req = new JotStoreEntityRequest(token, key, contactsAsJson);
                     String jsonString = req.toJSONString();
                     Log.d(TAG, jsonString);
@@ -104,7 +105,7 @@ public class RemoteService extends Service {
             }
         }
 
-        private void doWork(final String jsonStringToSend) {
+        private void doWork(final String jsonStringToSend, final String tag) {
             try {
                 Log.d(TAG, "Received data from remote service.");
                 Log.d(TAG, jsonStringToSend);
@@ -123,7 +124,7 @@ public class RemoteService extends Service {
                                     case LOGON:
                                         token = serverResp.getString("retval");
                                         Log.d(TAG, "---------------- token : " + token);
-                                        storeEntity(this, jsonStringToSend);
+                                        storeEntity(this, jsonStringToSend, tag);
                                         break;
                                     case STORE_ENTITY:
                                         String retval = serverResp.getString("retval");

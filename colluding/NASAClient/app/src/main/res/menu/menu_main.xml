@@ -3,8 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="net.leseonline.nasaclient.MainActivity">
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/action_apod"
         android:orderInCategory="100"
-        android:title="@string/action_settings"
+        android:title="@string/action_apod"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_apod_by_date"
+        android:orderInCategory="100"
+        android:title="@string/action_apod_by_date"
         app:showAsAction="never" />
 </menu>

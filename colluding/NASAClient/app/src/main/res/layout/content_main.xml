@@ -13,7 +13,26 @@
     tools:showIn="@layout/activity_main">
 
     <TextView
+        android:id="@+id/id_title"
+        android:text="@string/id_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!" />
+        android:layout_marginLeft="0dp" />
+
+    <WebView
+        android:id="@+id/id_apod_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/id_title"
+        />
+
+    <TextView
+        android:id="@+id/id_copyright"
+        android:text="@string/id_copyright"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="0dp"
+        android:layout_below="@+id/id_apod_image"
+        />
+
 </RelativeLayout>

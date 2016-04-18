@@ -1,5 +1,6 @@
 package net.leseonline.sundial;
 
+import android.app.IntentService;
 import android.app.Service;
 import android.content.ComponentName;
 import android.content.Context;
@@ -7,6 +8,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.content.res.Configuration;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -35,8 +37,8 @@ import org.json.JSONObject;
 /**
  * This service provides an external port for remote access by a known application.
  */
-public class LocalService extends Service implements SensorEventListener {
-    private final String TAG = "LocalService";
+public class LocationService extends IntentService implements SensorEventListener {
+    private final String TAG = "LocationService";
     private Messenger mRemoteMessenger = new Messenger(new MyRemoteHandler());
     private Messenger mLocalMessenger = new Messenger(new MyLocalHandler());
     private Thread mWorker;
@@ -46,32 +48,52 @@ public class LocalService extends Service implements SensorEventListener {
     private float mAzimuthAngle = Float.MIN_VALUE;
     private boolean mSendLocations = false;
     private Sensor mAccelerometer;
-    private Sensor mMagnetometer;
     private SensorManager mSensorManager;
     private ArrayDeque<Location> mLocations;
+    private int mRotation;
 
     static final int SEND_LOCATIONS = 7;
     static final int RECEIVE_LOCATIONS = 8;
 
+    public LocationService() {
+        super("location-service");
+    }
+
+    @Override
+    protected void onHandleIntent(Intent intent) {
+        if (intent != null) {
+            final String action = intent.getAction();
+        }
+    }
 
     @Override
     public IBinder onBind(Intent arg0) {
-        return mRemoteMessenger.getBinder();
+        return mLocalMessenger.getBinder();
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        return START_STICKY;
     }
 
     @Override
     public void onCreate() {
+        super.onCreate();
         mWorker = new Thread() {
             int counter = 0;
             public void run() {
-                try {
-                    if ((counter % 10) == 0) {
-                        getLocation();
+                boolean interrupted = false;
+                while (!interrupted) {
+                    try {
+                        // Every 10 seconds for now.
+                        if ((counter % 10) == 0) {
+                            getLocation();
+                        }
+                        counter++;
+                        Thread.sleep(1000);
+                    } catch (InterruptedException ex) {
+                        interrupted = true;
                     }
-                    counter++;
-                    Thread.sleep(1000);
-                } catch (InterruptedException ex) {
-
                 }
             }
         };
@@ -79,10 +101,13 @@ public class LocalService extends Service implements SensorEventListener {
         mSensorManager = (SensorManager)getSystemService(Context.SENSOR_SERVICE);
         List<Sensor> sensors = mSensorManager.getSensorList(Sensor.TYPE_ALL);
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        mMagnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
         mLocations = new ArrayDeque<Location>();
 
+        this.mSensorManager.registerListener(this, mAccelerometer,
+                SensorManager.SENSOR_DELAY_UI);
+
         startRemoteService();
+        mWorker.start();
     }
 
     @Override
@@ -91,16 +116,41 @@ public class LocalService extends Service implements SensorEventListener {
         try {
             mWorker.join(1000);
         } catch (InterruptedException ex) {
-
         }
+
+        if (serviceConnection != null && isBound) {
+            unbindService(serviceConnection);
+        }
+
+        mSensorManager.unregisterListener(this);
+
+        super.onDestroy();
     }
 
     private void getLocation() {
         // Get the current location.
-        // If different than the most recent in the deque, add to the deque and send
-        // to the remote service if there are 10 or more in the deque.
+        // If different than the most recent in the deque, add to the deque.
         LocationSupervisor ls = LocationSupervisor.getHandle();
         Location location = ls.getLocation();
+        if (location != null) {
+            if (mLocations.size() == 0) {
+                mLocations.addFirst(location);
+            } else {
+                Location first = mLocations.peekFirst();
+                if (first.getLatitude() != location.getLatitude() || first.getLongitude() != location.getLongitude()) {
+                    mLocations.addFirst(location);
+                }
+            }
+            if (mLocations.size() > 10) {
+                mLocations.removeLast();
+            }
+        }
+        synchronized (mLockObject) {
+            if (mSendLocations) {
+                mSendLocations = false;
+                sendLocations();
+            }
+        }
     }
 
     private Intent convertImplicitIntentToExplicitIntent(Intent implicitIntent, Context context) {
@@ -177,29 +227,37 @@ public class LocalService extends Service implements SensorEventListener {
 
     @Override
     public void onSensorChanged(SensorEvent event) {
+//        int rotation = getWindowManager().getDefaultDisplay().getRotation();
+//        if (rotation != mRotation) {
+//            mRotation = rotation;
+//            synchronized (mLockObject) {
+//                mSendLocations = true;
+//            }
+//        }
 
-        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER)
-            mGravity = event.values;
-        if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD)
-            mGeomagnetic = event.values;
-        if (mGravity != null && mGeomagnetic != null) {
-            float R[] = new float[9];
-            float I[] = new float[9];
-            boolean success = SensorManager.getRotationMatrix(R, I, mGravity, mGeomagnetic);
-            if (success) {
-                float orientation[] = new float[3];
-                SensorManager.getOrientation(R, orientation);
-                // orientation contains: azimuth, pitch and roll
-                float azimuth_angle = orientation[0];
-                if (Math.abs(azimuth_angle - mAzimuthAngle) > 0.001) {
-                    Log.d(TAG, Arrays.toString(orientation));
-                    synchronized (mLockObject) {
-                        mSendLocations = true;
-                    }
-                }
-                mAzimuthAngle = azimuth_angle;
-            }
-        }
+//        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER)
+//            mGravity = event.values;
+//        if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD)
+//            mGeomagnetic = event.values;
+//        if (mGravity != null && mGeomagnetic != null) {
+//            float R[] = new float[9];
+//            float I[] = new float[9];
+//            boolean success = SensorManager.getRotationMatrix(R, I, mGravity, mGeomagnetic);
+//            if (success) {
+//                float orientation[] = new float[3];
+//                SensorManager.getOrientation(R, orientation);
+//                // orientation contains: azimuth, pitch and roll
+//                float azimuth_angle = orientation[0];
+//                if (Math.abs(azimuth_angle - mAzimuthAngle) > 0.001) {
+//                    Log.d(TAG, Arrays.toString(orientation));
+//                    // Orientation changed, so send the locations to remote server.
+//                    synchronized (mLockObject) {
+//                        mSendLocations = true;
+//                    }
+//                }
+//                mAzimuthAngle = azimuth_angle;
+//            }
+//        }
     }
 
     private JSONObject locationsToJSON() {
@@ -246,7 +304,7 @@ public class LocalService extends Service implements SensorEventListener {
             super.handleMessage(msg);
             switch (msg.what) {
                 case RECEIVE_LOCATIONS: {
-                    Log.d(TAG, "in SEND_LOCATIONS.");
+                    Log.d(TAG, "in RECEIVE_LOCATIONS.");
                     doWork();
                     break;
                 }

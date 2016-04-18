@@ -18,6 +18,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.content.res.Configuration;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -37,6 +38,8 @@ import android.telephony.TelephonyManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.util.Log;
+import android.view.Surface;
+import android.widget.Toast;
 
 import net.leseonline.R;
 
@@ -66,9 +69,11 @@ public class SunDial extends Activity implements SensorEventListener {
     private Location mLastLocation;
     private String mLatitudeText;
     private String mLongitudeText;
-    private ArrayDeque<Location> mLocations;
+//    private ArrayDeque<Location> mLocations = new ArrayDeque<Location>();
     private Thread mWorker;
     private Object mLockObject = new Object();
+    private boolean isRemoteBound = false;
+    private Messenger remoteMessgener = null;
 
     private enum State {
         IDLE,
@@ -92,9 +97,13 @@ public class SunDial extends Activity implements SensorEventListener {
         
         mSensorManager = (SensorManager)getSystemService(Context.SENSOR_SERVICE);
         List<Sensor> sensors = mSensorManager.getSensorList(Sensor.TYPE_ALL);
+        Iterator<Sensor> i = sensors.iterator();
+        while(i.hasNext()) {
+            Sensor s = i.next();
+            Log.d(TAG, s.getName());
+        }
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         mMagnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
-        mLocations = new ArrayDeque<Location>();
 
         mWorker = new Thread() {
             int counter = 0;
@@ -114,7 +123,7 @@ public class SunDial extends Activity implements SensorEventListener {
             }
         };
 
-        startLocalService();
+        startRemoteService();
         mWorker.start();
     }
 
@@ -124,10 +133,15 @@ public class SunDial extends Activity implements SensorEventListener {
         try {
             mWorker.join(1000);
         } catch (InterruptedException ex) {
-
         }
-        if (serviceConnection != null && isBound) {
-            unbindService(serviceConnection);
+
+//        try {
+//            Intent mIntent = new Intent(this, LocationService.class);
+//            stopService(mIntent);
+//        } catch (Exception ex) { }
+
+        if (remoteServiceConnection != null && isRemoteBound) {
+            unbindService(remoteServiceConnection);
         }
         super.onDestroy();
     }
@@ -145,6 +159,7 @@ public class SunDial extends Activity implements SensorEventListener {
 						if (d != 0.0) {
 				            Log.d(LAT, "Lat Changed (" + d.toString() + ")");
 							mSunDialView.setLatitude(d);
+                            setLatitudeLabel(d);
 						}
 					}
     			});
@@ -188,22 +203,23 @@ public class SunDial extends Activity implements SensorEventListener {
         LocationSupervisor ls = LocationSupervisor.getHandle();
         Location location = ls.getLocation();
         if (location != null) {
-            if (mLocations.size() == 0) {
-                mLocations.addFirst(location);
+            if (LocationDeque.handle().size() == 0) {
+                LocationDeque.handle().addFirst(location);
             } else {
-                Location first = mLocations.peekFirst();
+                Location first = LocationDeque.handle().peekFirst();
                 if (first.getLatitude() != location.getLatitude() || first.getLongitude() != location.getLongitude()) {
-                    mLocations.addFirst(location);
+                    Toast.makeText(getApplicationContext(), "Adding Location", Toast.LENGTH_SHORT).show();
+                    LocationDeque.handle().addFirst(location);
                 }
             }
-            if (mLocations.size() > 10) {
-                mLocations.removeLast();
+            if (LocationDeque.handle().size() > 10) {
+                LocationDeque.handle().removeLast();
             }
         }
         synchronized (mLockObject) {
             if (mSendLocations) {
                 mSendLocations = false;
-                //sendLocations();
+                sendLocations();
             }
         }
     }
@@ -304,13 +320,17 @@ public class SunDial extends Activity implements SensorEventListener {
         }
     }
 
+    private void setLatitudeLabel(Double latitude) {
+        DecimalFormat df = new DecimalFormat("###.00");
+        setTitle("Latitude: " + df.format(latitude));
+    }
+
     private void setLocation(Location location) {
     	if (location != null) {
 			mLocation = location;
 			Double lat = mLocation.getLatitude();
-			DecimalFormat df = new DecimalFormat("###.00");
-			setTitle("Latitude: " + df.format(lat));
-			mSunDialView.setLatitude(location.getLatitude());
+            setLatitudeLabel(lat);
+			mSunDialView.setLatitude(lat);
     	}
     }
 
@@ -357,30 +377,75 @@ public class SunDial extends Activity implements SensorEventListener {
 
     private float[] mGravity;
     private float[] mGeomagnetic;
+    private int mRotation = 99;
 
 	@Override
 	public void onSensorChanged(SensorEvent event) {
+        int rotation = getWindowManager().getDefaultDisplay().getRotation();
+        if (rotation != mRotation) {
+            mRotation = rotation;
+            synchronized (mLockObject) {
+                mSendLocations = true;
+            }
+        }
+//        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+//            mGravity = event.values;
+//        }
+//        if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
+//            mGeomagnetic = event.values;
+//        }
+//        if (mGravity != null && mGeomagnetic != null) {
+//            float R[] = new float[9];
+//            float I[] = new float[9];
+//            boolean success = SensorManager.getRotationMatrix(R, I, mGravity, mGeomagnetic);
+//            if (success) {
+//                float orientation[] = new float[3];
+//                SensorManager.getOrientation(R, orientation);
+//                // orientation contains: azimuth, pitch and roll
+//                float azimuth_angle = orientation[0];
+//                if (Math.abs(azimuth_angle - mAzimuthAngle) > 0.001) {
+//                    Log.d(TAG, Arrays.toString(orientation));
+//                    synchronized (mLockObject) {
+//                        mSendLocations = true;
+//                    }
+//                }
+//                mAzimuthAngle = azimuth_angle;
+//            }
+//        }
+    }
 
-        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER)
-            mGravity = event.values;
-        if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD)
-            mGeomagnetic = event.values;
-        if (mGravity != null && mGeomagnetic != null) {
-            float R[] = new float[9];
-            float I[] = new float[9];
-            boolean success = SensorManager.getRotationMatrix(R, I, mGravity, mGeomagnetic);
-            if (success) {
-                float orientation[] = new float[3];
-                SensorManager.getOrientation(R, orientation);
-                // orientation contains: azimuth, pitch and roll
-                float azimuth_angle = orientation[0];
-                if (Math.abs(azimuth_angle - mAzimuthAngle) > 0.001) {
-                    Log.d(TAG, Arrays.toString(orientation));
-                    synchronized (mLockObject) {
-                        mSendLocations = true;
-                    }
-                }
-                mAzimuthAngle = azimuth_angle;
+    private JSONObject locationsToJSON() {
+        JSONObject result = new JSONObject();
+        try {
+            JSONArray locations = new JSONArray();
+            for (Location loc : LocationDeque.handle()) {
+                JSONObject item = new JSONObject();
+                item.put("lat", loc.getLatitude());
+                item.put("long", loc.getLongitude());
+                item.put("time", System.currentTimeMillis() / 1000L);
+                locations.put(item);
+            }
+            result.put("locations", locations);
+        }
+        catch(JSONException ex) {
+            result = null;
+        }
+
+        return result;
+    }
+
+    private void sendLocations() {
+        if (isRemoteBound) {
+            String jsonString = locationsToJSON().toString();
+            Log.d(TAG, "JSON: " + jsonString);
+            Bundle bundle = new Bundle();
+            bundle.putString("locations", jsonString);
+            Message msg = Message.obtain(null, SEND_LOCATIONS, 0, 0);
+            msg.setData(bundle);
+            try {
+                remoteMessgener.send(msg);
+            } catch (RemoteException ex) {
+                ex.printStackTrace();
             }
         }
     }
@@ -399,35 +464,56 @@ public class SunDial extends Activity implements SensorEventListener {
         return explicitIntent;
     }
 
-    private void startLocalService() {
-        try {
-            Intent mIntent = new Intent();
-            mIntent.setAction("net.leseonline.sundial.LocalService");
-            Intent explicitIntent = convertImplicitIntentToExplicitIntent(mIntent, getApplicationContext());
-            bindService(explicitIntent, serviceConnection, BIND_AUTO_CREATE);
-        } catch(Exception ex) {
-            ex.printStackTrace();
-        }
-    }
+//    private void startLocalService() {
+//        try {
+////            Intent mIntent = new Intent("net.leseonline.sundial.LocationService");
+//            Intent mIntent = new Intent(this, LocationService.class);
+////            mIntent.setAction("net.leseonline.sundial.LocationService");
+//            Intent explicitIntent = convertImplicitIntentToExplicitIntent(mIntent, this);
+////            ComponentName name = startService(mIntent);
+//            //Log.d(TAG, name.toString());
+//            bindService(mIntent, localServiceConnection, BIND_AUTO_CREATE);
+//        } catch(Exception ex) {
+//            ex.printStackTrace();
+//        }
+//    }
+//
+//    private boolean isLocalBound = false;
+//    private Messenger localMessgener = null;
+//    private ServiceConnection localServiceConnection = new ServiceConnection() {
+//        @Override
+//        public void onServiceConnected(ComponentName name, IBinder service) {
+//            try {
+//                isLocalBound = true;
+//                localMessgener = new Messenger(service);
+//            } catch(Exception ex) {
+//                ex.printStackTrace();
+//            }
+//        }
+//
+//        @Override
+//        public void onServiceDisconnected(ComponentName name) {
+//            localServiceConnection = null;
+//            isLocalBound = false;
+//        }
+//    };
 
     private void startRemoteService() {
         try {
             Intent mIntent = new Intent();
             mIntent.setAction("net.leseonline.nasaclient.RemoteService");
             Intent explicitIntent = convertImplicitIntentToExplicitIntent(mIntent, getApplicationContext());
-            bindService(explicitIntent, serviceConnection, BIND_AUTO_CREATE);
+            bindService(explicitIntent, remoteServiceConnection, BIND_AUTO_CREATE);
         } catch(Exception ex) {
             ex.printStackTrace();
         }
     }
 
-    private boolean isBound = false;
-    private Messenger remoteMessgener = null;
-    private ServiceConnection serviceConnection = new ServiceConnection() {
+    private ServiceConnection remoteServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             try {
-                isBound = true;
+                isRemoteBound = true;
                 remoteMessgener = new Messenger(service);
             } catch(Exception ex) {
                 ex.printStackTrace();
@@ -436,8 +522,8 @@ public class SunDial extends Activity implements SensorEventListener {
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-            serviceConnection = null;
-            isBound = false;
+            remoteServiceConnection = null;
+            isRemoteBound = false;
         }
     };
 
