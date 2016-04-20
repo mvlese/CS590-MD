@@ -1,9 +1,6 @@
 package net.leseonline.sundial;
 
-import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Deque;
 import java.util.Iterator;
 import java.util.List;
 import java.text.DecimalFormat;
@@ -12,7 +9,6 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.ComponentName;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
@@ -20,10 +16,6 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.content.res.Configuration;
-import android.database.Cursor;
-import android.database.DatabaseUtils;
-import android.database.sqlite.SQLiteDatabase;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -39,12 +31,9 @@ import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
 import android.support.v4.app.ActivityCompat;
-import android.telephony.TelephonyManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.util.Log;
-import android.view.Surface;
-import android.widget.Toast;
 
 import net.leseonline.R;
 
@@ -64,31 +53,26 @@ public class SunDial extends Activity implements SensorEventListener {
     private boolean mSendLocations = false;
 
     private static final int SEND_LOCATIONS = 7;
-    static final int RECEIVE_LOCATIONS = 8;
     private static final String TAG = "Compass";
     private static final String LAT = "Latitude";
     private static final int DIALOG_SET_LAT = 1;
     private static final int MENU_SET_LAT = 1;
     private static final int MENU_SET_MINE = 2;
     private static String[] PERMISSIONS_LOCATION = {Manifest.permission.ACCESS_FINE_LOCATION};
-    private Location mLastLocation;
-    private String mLatitudeText;
-    private String mLongitudeText;
-    //    private ArrayDeque<Location> mLocations = new ArrayDeque<Location>();
     private Thread mWorker;
     private Object mLockObject = new Object();
     private boolean isRemoteBound = false;
     private Messenger remoteMessgener = null;
     private LocationDbHelper mDbHelper;
+    private int mRotation = 99;
 
     private enum State {
         IDLE,
         SETUP,
         USE,
         USE_GOOGLE
-    }
+    };
 
-    ;
     private State mState = State.IDLE;
 
     /**
@@ -146,11 +130,6 @@ public class SunDial extends Activity implements SensorEventListener {
             mWorker.join(1000);
         } catch (InterruptedException ex) {
         }
-
-//        try {
-//            Intent mIntent = new Intent(this, LocationService.class);
-//            stopService(mIntent);
-//        } catch (Exception ex) { }
 
         if (remoteServiceConnection != null && isRemoteBound) {
             unbindService(remoteServiceConnection);
@@ -221,8 +200,8 @@ public class SunDial extends Activity implements SensorEventListener {
                 BasicLocation first = LocationDbHelper.peekFirstLocation(mDbHelper);
                 // If difference between the most recent and the new is greater than
                 // 0.001 for either that lat or long, add the location.
-                if (first != null && ((Math.abs(first.getLatitude() - location.getLatitude()) > 0.001) ||
-                        (Math.abs(first.getLongitude() - location.getLongitude()) > 0.001))) {
+                if (first != null && ((Math.abs(first.getLatitude() - location.getLatitude()) > 0.0001) ||
+                        (Math.abs(first.getLongitude() - location.getLongitude()) > 0.0001))) {
 //                    Toast.makeText(getApplicationContext(), "Adding Location", Toast.LENGTH_SHORT).show();
                     LocationDbHelper.addLocation(mDbHelper, location);
                 }
@@ -384,10 +363,6 @@ public class SunDial extends Activity implements SensorEventListener {
 
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
     }
-
-    private float[] mGravity;
-    private float[] mGeomagnetic;
-    private int mRotation = 99;
 
     @Override
     public void onSensorChanged(SensorEvent event) {
