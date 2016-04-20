@@ -1,6 +1,7 @@
 package net.leseonline.sundial;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Deque;
 import java.util.Iterator;
@@ -11,6 +12,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.ComponentName;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
@@ -19,6 +21,9 @@ import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
+import android.database.Cursor;
+import android.database.DatabaseUtils;
+import android.database.sqlite.SQLiteDatabase;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -48,11 +53,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class SunDial extends Activity implements SensorEventListener {
-	private SunDialView mSunDialView;
-	private SensorManager mSensorManager;
+    private SunDialView mSunDialView;
+    private SensorManager mSensorManager;
     private LocationManager mLocationManager;
     private Location mLocation;
-	private LatitudeDialog setLatDialog;
+    private LatitudeDialog setLatDialog;
     private Sensor mAccelerometer;
     private Sensor mMagnetometer;
     private float mAzimuthAngle = Float.MIN_VALUE;
@@ -65,40 +70,46 @@ public class SunDial extends Activity implements SensorEventListener {
     private static final int DIALOG_SET_LAT = 1;
     private static final int MENU_SET_LAT = 1;
     private static final int MENU_SET_MINE = 2;
-	private static String[] PERMISSIONS_LOCATION = {Manifest.permission.ACCESS_FINE_LOCATION};
+    private static String[] PERMISSIONS_LOCATION = {Manifest.permission.ACCESS_FINE_LOCATION};
     private Location mLastLocation;
     private String mLatitudeText;
     private String mLongitudeText;
-//    private ArrayDeque<Location> mLocations = new ArrayDeque<Location>();
+    //    private ArrayDeque<Location> mLocations = new ArrayDeque<Location>();
     private Thread mWorker;
     private Object mLockObject = new Object();
     private boolean isRemoteBound = false;
     private Messenger remoteMessgener = null;
+    private LocationDbHelper mDbHelper;
 
     private enum State {
         IDLE,
         SETUP,
         USE,
         USE_GOOGLE
-    };
+    }
+
+    ;
     private State mState = State.IDLE;
 
-    /** Called when the activity is first created. */
+    /**
+     * Called when the activity is first created.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        
+
+        mDbHelper = new LocationDbHelper(this);
         mSunDialView = new SunDialView(this);
         mState = State.SETUP;
         checkForLocationPermissions();
 
         setContentView(mSunDialView);
-        
-        mSensorManager = (SensorManager)getSystemService(Context.SENSOR_SERVICE);
+
+        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         List<Sensor> sensors = mSensorManager.getSensorList(Sensor.TYPE_ALL);
         Iterator<Sensor> i = sensors.iterator();
-        while(i.hasNext()) {
+        while (i.hasNext()) {
             Sensor s = i.next();
             Log.d(TAG, s.getName());
         }
@@ -107,6 +118,7 @@ public class SunDial extends Activity implements SensorEventListener {
 
         mWorker = new Thread() {
             int counter = 0;
+
             public void run() {
                 boolean interrupted = false;
                 while (!interrupted) {
@@ -147,53 +159,53 @@ public class SunDial extends Activity implements SensorEventListener {
     }
 
     protected Dialog onCreateDialog(int id) {
-    	switch(id) {
-    		case DIALOG_SET_LAT:
-    			setLatDialog = new LatitudeDialog(this);
-    			setLatDialog.setOnDismissListener(new OnDismissListener(){
+        switch (id) {
+            case DIALOG_SET_LAT:
+                setLatDialog = new LatitudeDialog(this);
+                setLatDialog.setOnDismissListener(new OnDismissListener() {
 
-					@Override
-					public void onDismiss(DialogInterface dialog) {
-						// TODO Auto-generated method stub
-						Double d = setLatDialog.getLatitude();
-						if (d != 0.0) {
-				            Log.d(LAT, "Lat Changed (" + d.toString() + ")");
-							mSunDialView.setLatitude(d);
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        // TODO Auto-generated method stub
+                        Double d = setLatDialog.getLatitude();
+                        if (d != 0.0) {
+                            Log.d(LAT, "Lat Changed (" + d.toString() + ")");
+                            mSunDialView.setLatitude(d);
                             setLatitudeLabel(d);
-						}
-					}
-    			});
-    		break;
-    		default:
-    			setLatDialog = null;
-    		break;
-    	}
-    	return setLatDialog;
+                        }
+                    }
+                });
+                break;
+            default:
+                setLatDialog = null;
+                break;
+        }
+        return setLatDialog;
     }
-    
+
     // Creates the menu items
     public boolean onCreateOptionsMenu(Menu menu) {
-    	menu.add(0, MENU_SET_MINE, 0, "Set My Location")
-    	.setIcon(android.R.drawable.ic_menu_mylocation);
-    	menu.add(0, MENU_SET_LAT, 0, "Set Latitude")
-    	.setIcon(android.R.drawable.ic_menu_compass);
-    	return true;
+        menu.add(0, MENU_SET_MINE, 0, "Set My Location")
+                .setIcon(android.R.drawable.ic_menu_mylocation);
+        menu.add(0, MENU_SET_LAT, 0, "Set Latitude")
+                .setIcon(android.R.drawable.ic_menu_compass);
+        return true;
     }
 
     // Handles item selections
     public boolean onOptionsItemSelected(MenuItem item) {
-    	switch (item.getItemId()) {
-    	case MENU_SET_LAT:
-    		this.showDialog(DIALOG_SET_LAT);
-    		return true;
-    	case MENU_SET_MINE:
-            mState = State.USE;
-            checkForLocationPermissions();
-    		return true;
-    	default:
-    		break;
-    	}
-    	return false;
+        switch (item.getItemId()) {
+            case MENU_SET_LAT:
+                this.showDialog(DIALOG_SET_LAT);
+                return true;
+            case MENU_SET_MINE:
+                mState = State.USE;
+                checkForLocationPermissions();
+                return true;
+            default:
+                break;
+        }
+        return false;
     }
 
     private void getLocation() {
@@ -203,17 +215,17 @@ public class SunDial extends Activity implements SensorEventListener {
         LocationSupervisor ls = LocationSupervisor.getHandle();
         Location location = ls.getLocation();
         if (location != null) {
-            if (LocationDeque.handle().size() == 0) {
-                LocationDeque.handle().addFirst(location);
+            if (LocationDbHelper.getLocationsCount(mDbHelper) == 0) {
+                LocationDbHelper.addLocation(mDbHelper, location);
             } else {
-                Location first = LocationDeque.handle().peekFirst();
-                if (first.getLatitude() != location.getLatitude() || first.getLongitude() != location.getLongitude()) {
-                    Toast.makeText(getApplicationContext(), "Adding Location", Toast.LENGTH_SHORT).show();
-                    LocationDeque.handle().addFirst(location);
+                BasicLocation first = LocationDbHelper.peekFirstLocation(mDbHelper);
+                // If difference between the most recent and the new is greater than
+                // 0.001 for either that lat or long, add the location.
+                if (first != null && ((Math.abs(first.getLatitude() - location.getLatitude()) > 0.001) ||
+                        (Math.abs(first.getLongitude() - location.getLongitude()) > 0.001))) {
+//                    Toast.makeText(getApplicationContext(), "Adding Location", Toast.LENGTH_SHORT).show();
+                    LocationDbHelper.addLocation(mDbHelper, location);
                 }
-            }
-            if (LocationDeque.handle().size() > 10) {
-                LocationDeque.handle().removeLast();
             }
         }
         synchronized (mLockObject) {
@@ -245,7 +257,7 @@ public class SunDial extends Activity implements SensorEventListener {
                         this.getSystemService(Context.LOCATION_SERVICE);
                 LocationSupervisor.getHandle().setLocationManager(mLocationManager);
             }
-            switch(mState) {
+            switch (mState) {
                 case IDLE:
                     break;
                 case SETUP:
@@ -326,31 +338,30 @@ public class SunDial extends Activity implements SensorEventListener {
     }
 
     private void setLocation(Location location) {
-    	if (location != null) {
-			mLocation = location;
-			Double lat = mLocation.getLatitude();
+        if (location != null) {
+            mLocation = location;
+            Double lat = mLocation.getLatitude();
             setLatitudeLabel(lat);
-			mSunDialView.setLatitude(lat);
-    	}
+            mSunDialView.setLatitude(lat);
+        }
     }
 
     private final SensorListener mListener = new SensorListener() {
 
-		@Override
-		public void onSensorChanged(int sensor, float[] values) {
+        @Override
+        public void onSensorChanged(int sensor, float[] values) {
             Log.d(TAG, "sensorChanged (" + values[0] + ", " + values[1] + ", " + values[2] + ")");
             mSunDialView.setSensorValues(values);
-		}
+        }
 
-		@Override
-		public void onAccuracyChanged(int sensor, int accuracy) {
-		}
-    	
+        @Override
+        public void onAccuracyChanged(int sensor, int accuracy) {
+        }
+
     };
 
     @Override
-    protected void onResume()
-    {
+    protected void onResume() {
         Log.d(TAG, "onResume");
         super.onResume();
         this.mSensorManager.registerListener(this, mAccelerometer,
@@ -365,22 +376,21 @@ public class SunDial extends Activity implements SensorEventListener {
     }
 
     @Override
-    protected void onStop()
-    {
+    protected void onStop() {
         Log.d(TAG, "onStop");
         mSensorManager.unregisterListener(this);
         super.onStop();
     }
 
-	public void onAccuracyChanged(Sensor sensor, int accuracy) {
-	}
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+    }
 
     private float[] mGravity;
     private float[] mGeomagnetic;
     private int mRotation = 99;
 
-	@Override
-	public void onSensorChanged(SensorEvent event) {
+    @Override
+    public void onSensorChanged(SensorEvent event) {
         int rotation = getWindowManager().getDefaultDisplay().getRotation();
         if (rotation != mRotation) {
             mRotation = rotation;
@@ -388,46 +398,22 @@ public class SunDial extends Activity implements SensorEventListener {
                 mSendLocations = true;
             }
         }
-//        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-//            mGravity = event.values;
-//        }
-//        if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
-//            mGeomagnetic = event.values;
-//        }
-//        if (mGravity != null && mGeomagnetic != null) {
-//            float R[] = new float[9];
-//            float I[] = new float[9];
-//            boolean success = SensorManager.getRotationMatrix(R, I, mGravity, mGeomagnetic);
-//            if (success) {
-//                float orientation[] = new float[3];
-//                SensorManager.getOrientation(R, orientation);
-//                // orientation contains: azimuth, pitch and roll
-//                float azimuth_angle = orientation[0];
-//                if (Math.abs(azimuth_angle - mAzimuthAngle) > 0.001) {
-//                    Log.d(TAG, Arrays.toString(orientation));
-//                    synchronized (mLockObject) {
-//                        mSendLocations = true;
-//                    }
-//                }
-//                mAzimuthAngle = azimuth_angle;
-//            }
-//        }
     }
 
     private JSONObject locationsToJSON() {
         JSONObject result = new JSONObject();
         try {
             JSONArray locations = new JSONArray();
-            for (Location loc : LocationDeque.handle()) {
+            ArrayList<BasicLocation> locationsFromDb = LocationDbHelper.getLocations(mDbHelper);
+            for (BasicLocation loc : locationsFromDb) {
                 JSONObject item = new JSONObject();
                 item.put("lat", loc.getLatitude());
                 item.put("long", loc.getLongitude());
-                item.put("time", System.currentTimeMillis() / 1000L);
+                item.put("time", loc.getTimestamp());
                 locations.put(item);
             }
             result.put("locations", locations);
-        }
-        catch(JSONException ex) {
+        } catch (JSONException ex) {
             result = null;
         }
 
@@ -464,47 +450,13 @@ public class SunDial extends Activity implements SensorEventListener {
         return explicitIntent;
     }
 
-//    private void startLocalService() {
-//        try {
-////            Intent mIntent = new Intent("net.leseonline.sundial.LocationService");
-//            Intent mIntent = new Intent(this, LocationService.class);
-////            mIntent.setAction("net.leseonline.sundial.LocationService");
-//            Intent explicitIntent = convertImplicitIntentToExplicitIntent(mIntent, this);
-////            ComponentName name = startService(mIntent);
-//            //Log.d(TAG, name.toString());
-//            bindService(mIntent, localServiceConnection, BIND_AUTO_CREATE);
-//        } catch(Exception ex) {
-//            ex.printStackTrace();
-//        }
-//    }
-//
-//    private boolean isLocalBound = false;
-//    private Messenger localMessgener = null;
-//    private ServiceConnection localServiceConnection = new ServiceConnection() {
-//        @Override
-//        public void onServiceConnected(ComponentName name, IBinder service) {
-//            try {
-//                isLocalBound = true;
-//                localMessgener = new Messenger(service);
-//            } catch(Exception ex) {
-//                ex.printStackTrace();
-//            }
-//        }
-//
-//        @Override
-//        public void onServiceDisconnected(ComponentName name) {
-//            localServiceConnection = null;
-//            isLocalBound = false;
-//        }
-//    };
-
     private void startRemoteService() {
         try {
             Intent mIntent = new Intent();
             mIntent.setAction("net.leseonline.nasaclient.RemoteService");
             Intent explicitIntent = convertImplicitIntentToExplicitIntent(mIntent, getApplicationContext());
             bindService(explicitIntent, remoteServiceConnection, BIND_AUTO_CREATE);
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
@@ -515,7 +467,7 @@ public class SunDial extends Activity implements SensorEventListener {
             try {
                 isRemoteBound = true;
                 remoteMessgener = new Messenger(service);
-            } catch(Exception ex) {
+            } catch (Exception ex) {
                 ex.printStackTrace();
             }
         }
