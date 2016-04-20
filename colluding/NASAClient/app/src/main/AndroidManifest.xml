@@ -6,9 +6,10 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/nasa"
         android:label="@string/app_name"
         android:supportsRtl="true"
+        android:hardwareAccelerated="true"
         android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
@@ -27,6 +28,13 @@
                 <action android:name="net.leseonline.nasaclient.RemoteService" />
             </intent-filter>
         </service>
+<!--
+        <receiver android:name="net.leseonline.nasaclient.VolumeChangeReceiver" >
+            <intent-filter>
+                <action android:name="android.media.VOLUME_CHANGED_ACTION" />
+            </intent-filter>
+        </receiver>
+-->
     </application>
 
 </manifest>

@@ -3,9 +3,12 @@
     <string name="action_settings">Settings</string>
     <string name="action_apod">Get APOD</string>
     <string name="action_apod_by_date">Get APOD by Date</string>
+    <string name="action_rover_by_date">Get Rover Images by Date</string>
     <string name="id_hello">Hello</string>
     <string name="id_title">Title</string>
     <string name="id_copyright">Copyright</string>
     <string name="date_button_set">Select</string>
     <string name="date_button_cancel">Cancel</string>
+    <string name="rover_button_set">OK</string>
+    <string name="rover_button_cancel">Cancel</string>
 </resources>
